@@ -19,7 +19,7 @@ namespace FeatureStoryPoints {
     DEFAULT_DAYS_PER_SIZE[SIZE_L] = 5;
 
     export function inject() {
-        if (!isMilestonePage()) {
+        if (!GithubPage.isMilestone(window.location)) {
             Log.l('Not a milestone page: ignoring.');
             return;
         }
@@ -39,11 +39,6 @@ namespace FeatureStoryPoints {
                 }
             }, 1000);
         }
-    }
-
-    let MILESTONE_REGEX = '^/.+/.+/milestone/[0-9]+'
-    function isMilestonePage() {
-        return window.location.pathname.match(MILESTONE_REGEX);
     }
 
     function onPageReady() {
