@@ -1,5 +1,5 @@
 namespace Log {
-    const LOGTAG = 'github-issue-pr-linker';
+    const LOGTAG = 'apt_github_improvements';
 
     export function d(msg: string) { _log(msg, console.debug); }
     export function l(msg: string) { _log(msg, console.log); }
