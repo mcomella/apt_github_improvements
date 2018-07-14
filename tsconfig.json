@@ -2,7 +2,7 @@
     "compilerOptions": {
         "outFile": "./src/dist/content_script.js",
         "sourceMap": true,
-        "allowJs": true,
+        "allowJs": true, // for github_navigation
         "alwaysStrict": true, // required for jasmine to support block-scoped declarations
 
         "strictNullChecks": true,

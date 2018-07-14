@@ -1,0 +1,16 @@
+{
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "outFile": "./dist/tests.spec.js",
+    },
+
+    "include": [
+        "../typings",
+        "../src/ts",
+        "./",
+    ],
+
+    "exclude": [
+        "./dist",
+    ]
+}
