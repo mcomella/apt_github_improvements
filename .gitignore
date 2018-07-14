@@ -1,0 +1,7 @@
+# Build
+./dist/
+src/dist/
+spec/dist
+
+# Editor
+.vscode
