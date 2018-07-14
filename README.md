@@ -24,8 +24,8 @@ Development with Visual Studio Code is recommended, given its awareness of Types
 ```
 
 ## License
-This repository is licensed under the Mozilla Public License, version 2.0: see
-`./LICENSE`.
+This repository is primarily licensed under the Mozilla Public License,
+version 2.0. For exceptions, see `./LICENSE`.
 
 [hoister]: https://github.com/mcomella/github-issue-hoister
 [typed]: https://github.com/DefinitelyTyped/DefinitelyTyped
