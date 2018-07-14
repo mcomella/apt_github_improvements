@@ -8,7 +8,6 @@ rm -rf dist/
 mkdir dist/
 
 tsc && \
-    tsc -p src/options && \
     tsc -p spec && jasmine && \
     zip -r -FS dist/bundle.xpi \
         src/dist/ \

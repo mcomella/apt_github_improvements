@@ -6,16 +6,23 @@ It comes with several features including:
 - Story Points
 
 ## Development
-Install the typescript compiler (through `npm`) and build with:
+Install the typescript compiler, `tsc`, with `npm` and build with:
 ```sh
 tsc
 ```
 
-Add the `-w` argument for continuous compilation.
-
-To test your code in Firefox, you can load [a temporary add-on][temp addon].
+Add the `-w` argument for continuous compilation. To run your add-on in Firefox,
+you can load [a temporary add-on][temp addon].
 
 Development with Visual Studio Code is recommended, given its awareness of Typescript types.
+
+### Tests
+The tests can be found in the `./spec` directory.
+
+Install `jasmine` globally with `npm`. To build and run the tests:
+```sh
+tsc -p spec && jasmine
+```
 
 ### Publishing
 `dist/bundle.xpi` will be created after:
