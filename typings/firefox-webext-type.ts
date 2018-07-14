@@ -4393,28 +4393,30 @@ declare namespace browser.devtools.inspectedWindow {
      * @param expression An expression to evaluate.
      * @param [options] The options parameter can contain one or more options.
      */
-    function eval(expression: string, options?: {
-        /**
-         * If specified, the expression is evaluated on the iframe whose URL matches the one specified. By default, the
-         * expression is evaluated in the top frame of the inspected page.
-         * @deprecated Unsupported on Firefox at this time.
-         */
-        frameURL?: string;
-        /**
-         * Evaluate the expression in the context of the content script of the calling extension, provided that the
-         * content script is already injected into the inspected page. If not, the expression is not evaluated and the
-         * callback is invoked with the exception parameter set to an object that has the `isError` field set to true
-         * and the `code` field set to `E_NOTFOUND`.
-         * @deprecated Unsupported on Firefox at this time.
-         */
-        useContentScriptContext?: boolean;
-        /**
-         * Evaluate the expression in the context of a content script of an extension that matches the specified
-         * origin. If given, contextSecurityOrigin overrides the 'true' setting on userContentScriptContext.
-         * @deprecated Unsupported on Firefox at this time.
-         */
-        contextSecurityOrigin?: string;
-    }): Promise<object | undefined>;
+    // *APT_GITHUB_IMPROVEMENTS*: Enabling strict mode and having `eval` defined causes tsc to fail to compile.
+    // We probably don't want to be calling eval anyway so it's fine to disable.
+    // function eval(expression: string, options?: {
+    //     /**
+    //      * If specified, the expression is evaluated on the iframe whose URL matches the one specified. By default, the
+    //      * expression is evaluated in the top frame of the inspected page.
+    //      * @deprecated Unsupported on Firefox at this time.
+    //      */
+    //     frameURL?: string;
+    //     /**
+    //      * Evaluate the expression in the context of the content script of the calling extension, provided that the
+    //      * content script is already injected into the inspected page. If not, the expression is not evaluated and the
+    //      * callback is invoked with the exception parameter set to an object that has the `isError` field set to true
+    //      * and the `code` field set to `E_NOTFOUND`.
+    //      * @deprecated Unsupported on Firefox at this time.
+    //      */
+    //     useContentScriptContext?: boolean;
+    //     /**
+    //      * Evaluate the expression in the context of a content script of an extension that matches the specified
+    //      * origin. If given, contextSecurityOrigin overrides the 'true' setting on userContentScriptContext.
+    //      * @deprecated Unsupported on Firefox at this time.
+    //      */
+    //     contextSecurityOrigin?: string;
+    // }): Promise<object | undefined>;
 
     /** Reloads the inspected page. */
     function reload(reloadOptions?: {
