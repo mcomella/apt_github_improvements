@@ -1,6 +1,9 @@
 Typescript type definitions (typings/) are available via DefinitelyTyped [1]
 under the MIT license. The license file is included in that directory.
 
+Some third party code is available under src/ts/thirdparty/<project-name>.
+Each project directory contains its projects license file.
+
 src/github_navigation.js is included under the X11 license: its license
 is contained within that file.
 
