@@ -23,10 +23,7 @@ namespace FeatureStoryPoints {
     DEFAULT_DAYS_PER_SIZE[SIZE_L] = 5;
 
     export function inject() {
-        if (!GithubPage.isMilestone(window.location)) {
-            Log.l('Not a milestone page: ignoring.');
-            return;
-        }
+        if (!PageDetect.isMilestone()) { return; }
 
         if (!isOpenIssuesTabSelected()) {
             Log.l('"Open" tab is not selected. Ignoring.');
