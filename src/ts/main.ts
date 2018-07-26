@@ -3,7 +3,13 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 function onPageLoad() { // Called by github_navigation.js.
-    if (PageDetect.isMilestone()) {
+    const Page = PageDetect;
+
+    if (Page.isIssue() || Page.isPR()) {
+        FeatureLinkBugzillaBugs.inject();
+    }
+
+    if (Page.isMilestone()) {
         FeatureStoryPoints.inject();
     }
 }

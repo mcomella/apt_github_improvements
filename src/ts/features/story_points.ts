@@ -28,8 +28,6 @@ namespace FeatureStoryPoints {
     DEFAULT_DAYS_PER_SIZE[SIZE_L] = 5;
 
     export function inject() {
-        if (!PageDetect.isMilestone()) { return; }
-
         if (!isOpenIssuesTabSelected()) {
             Log.l('"Open" tab is not selected. Ignoring.');
             return;
