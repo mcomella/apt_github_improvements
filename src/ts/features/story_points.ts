@@ -2,6 +2,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+/*
+ * Calculates the number of days it will take to complete a milestone
+ * based off "t-shirt sizing" labels. See
+ * http://mcomella.xyz/blog/2018/github-story-points.html for more details.
+ */
 namespace FeatureStoryPoints {
     let TAG = 'github-story-points';
 
