@@ -13,7 +13,6 @@
     },
 
     "include": [
-        "./typings",
         "./src/ts",
         "./src/github_navigation.js",
     ],
