@@ -31,8 +31,11 @@ tsc -p spec && jasmine
 ```
 
 ## License
-This repository is primarily licensed under the Mozilla Public License,
-version 2.0. For exceptions, see `./LICENSE`.
+```
+This Source Code Form is subject to the terms of the Mozilla Public
+License, v. 2.0. If a copy of the MPL was not distributed with this
+file, You can obtain one at http://mozilla.org/MPL/2.0/.
+```
 
 [hoister]: https://github.com/mcomella/github-issue-hoister
 [typed]: https://github.com/DefinitelyTyped/DefinitelyTyped
