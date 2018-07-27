@@ -4,7 +4,6 @@
         "sourceMap": true,
         "removeComments": true,
         "allowJs": true, // for github_navigation
-        "alwaysStrict": true, // required for jasmine to support block-scoped declarations
 
         "strictNullChecks": true,
         "noImplicitAny": true,
