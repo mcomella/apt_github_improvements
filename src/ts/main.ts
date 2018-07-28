@@ -9,7 +9,7 @@ function onPageLoad() { // Called by github_navigation.js.
 namespace Main {
     const ID_CONTAINER = 'webext-apt_github_improvements_container';
 
-    export function onPageLoad() {
+    export async function onPageLoad() {
         // The DOM doesn't refresh on reload so we have to
         // manually remove added nodes ourselves.
         removeAnyAddonContainers();
@@ -17,7 +17,7 @@ namespace Main {
         const Page = PageDetect;
         if (Page.isIssue() || Page.isPR()) {
             const preDiscussionsContainer = injectPreDiscussionsContainer();
-            FeatureLinkBugzillaBugs.inject(preDiscussionsContainer);
+            await FeatureLinkBugzillaBugs.inject(preDiscussionsContainer);
         }
 
         if (Page.isMilestone()) {
