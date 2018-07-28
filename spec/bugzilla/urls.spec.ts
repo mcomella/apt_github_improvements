@@ -10,7 +10,7 @@ describe('The Bugzilla namespace', () => {
             'http://bugzilla.mozilla.org',
             'https://bugzilla.mozilla.org/show_bug.cgi?id=1471868#c0'
         ].forEach(url => {
-            expect(Bugzilla.isBzURL(url)).toBeTruthy(url);
+            expect(BugzillaURLs.is(url)).toBeTruthy(url);
         });
     });
 
@@ -20,7 +20,7 @@ describe('The Bugzilla namespace', () => {
             'https://bugzilla.org',
             'https://fsf.org',
         ].forEach(url => {
-            expect(Bugzilla.isBzURL(url)).toBeFalsy(url);
+            expect(BugzillaURLs.is(url)).toBeFalsy(url);
         });
     });
 
@@ -29,7 +29,7 @@ describe('The Bugzilla namespace', () => {
             'https://bugzilla.mozilla.org/show_bug.cgi?id=1471868',
             'https://bugzilla.mozilla.org/show_bug.cgi?id=1471868#c0',
         ].forEach(url => {
-            expect(Bugzilla.getBugNumberFromURL(url)).toBe(1471868);
+            expect(BugzillaURLs.getBugNumber(url)).toBe(1471868);
         });
     });
 
@@ -39,7 +39,7 @@ describe('The Bugzilla namespace', () => {
             'https://fsf.org',
             'https://bugzilla.mozilla.org/buglist.cgi?quicksearch=firefox',
         ].forEach(url => {
-            expect(Bugzilla.getBugNumberFromURL(url)).toBeFalsy(url);
+            expect(BugzillaURLs.getBugNumber(url)).toBeFalsy(url);
         });
     });
 });
