@@ -5,6 +5,10 @@ It comes with several features including:
 - [Story Points](docs/feature_story_points.md)
 - Hoist Bugzilla links in comments to the top of the issue
 
+### Resources
+* Open issues: https://github.com/mcomella/apt_github_improvements/issues
+* Documentation: https://github.com/mcomella/apt_github_improvements/tree/master/docs
+
 ## Development
 Install the typescript compiler, `tsc`, with `npm` and build with:
 ```sh
