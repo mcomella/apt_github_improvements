@@ -24,6 +24,16 @@ describe('The Bugzilla namespace', () => {
         });
     });
 
+    it('can create urls from bug numbers', () => {
+        [
+            12345,
+            7890,
+        ].forEach(bugNumber => {
+            expect(BugzillaURLs.fromBugNumber(bugNumber))
+                    .toEqual(`https://bugzilla.mozilla.org/show_bug.cgi?id=${bugNumber}`)
+        });
+    });
+
     it('can extract bug numbers from bugzilla urls', () => {
         [
             'https://bugzilla.mozilla.org/show_bug.cgi?id=1471868',
