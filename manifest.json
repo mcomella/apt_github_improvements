@@ -14,5 +14,5 @@
     "permissions": [
         "*://bugzilla.mozilla.org/rest/*",
         "webRequest"
-]
+    ]
 }
