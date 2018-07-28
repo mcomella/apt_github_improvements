@@ -4,6 +4,7 @@ Soon available on addons.mozilla.org.
 It comes with several features including:
 - Issue Hoister
 - Story Points
+- Hoist Bugzilla links in comments to the top of the issue
 
 ## Development
 Install the typescript compiler, `tsc`, with `npm` and build with:
