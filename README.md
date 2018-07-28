@@ -1,5 +1,5 @@
 # APT GitHub Improvements
-Soon available on addons.mozilla.org.
+[Available on addons.mozilla.org.][AMO]
 
 It comes with several features including:
 - [Story Points](docs/feature_story_points.md)
@@ -44,3 +44,4 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 [hoister]: https://github.com/mcomella/github-issue-hoister
 [typed]: https://github.com/DefinitelyTyped/DefinitelyTyped
 [temp addon]: https://developer.mozilla.org/en-US/docs/Tools/about:debugging#Enabling_add-on_debugging
+[AMO]: https://addons.mozilla.org/en-US/firefox/addon/apt-github-improvements/
