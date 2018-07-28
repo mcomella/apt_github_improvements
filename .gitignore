@@ -1,5 +1,5 @@
 # Build
-./dist/
+dist/
 src/dist/
 spec/dist
 
