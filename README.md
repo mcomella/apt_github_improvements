@@ -2,8 +2,7 @@
 Soon available on addons.mozilla.org.
 
 It comes with several features including:
-- Issue Hoister
-- Story Points
+- [Story Points](docs/feature_story_points.md)
 - Hoist Bugzilla links in comments to the top of the issue
 
 ## Development
