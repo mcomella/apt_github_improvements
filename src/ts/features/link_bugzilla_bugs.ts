@@ -18,8 +18,8 @@ namespace FeatureLinkBugzillaBugs {
         const bugNumToLink = getBugNumberToLink(bzLinks);
         const bugSummaries = await getBugSummaries(bugNumToLink);
 
-        if (bzLinks.length > 0) {
-            appendBugzillaDataToContainer(bzLinks, preDiscussionsContainer);
+        if (bugSummaries.length > 0) {
+            appendBugzillaDataToContainer(bugSummaries, preDiscussionsContainer);
         }
     }
 
@@ -75,7 +75,7 @@ namespace FeatureLinkBugzillaBugs {
         return bugLinks;
     }
 
-    function appendBugzillaDataToContainer(bzLinks: HTMLAnchorElement[], container: HTMLDivElement) {
+    function appendBugzillaDataToContainer(bzLinks: BugLink[], container: HTMLDivElement) {
         const titleElement = document.createElement('p');
         titleElement.textContent = "Bugzilla bugs referenced in this issue:"
         titleElement.style.marginBottom = '0px'; // override GH style.
@@ -90,9 +90,24 @@ namespace FeatureLinkBugzillaBugs {
             const listItemElement = document.createElement('li');
             unorderedListElement.appendChild(listItemElement);
 
-            const linkElement = link.cloneNode() as HTMLAnchorElement;
-            linkElement.text = linkElement.href;
+            const linkElement = document.createElement('a');
+            linkElement.href = link.href;
+            linkElement.text = getLinkText(link);
             listItemElement.appendChild(linkElement);
         });
+    }
+
+    function getLinkText(link: BugLink): string {
+        if (!link.isPopulated) {
+            return `Bug #${link.id}`;
+        }
+
+        // Sample: Backspace deletes wrong chunk when deleting autocompleted URL  | FIXED VERIFIED | 1471868
+        var linkText = `${link.summary} | ${link.status}`;
+        if (!StringUtils.isBlank(link.resolution)) {
+            linkText += ` ${link.resolution}`;
+        }
+        linkText += ` | ${link.id}`;
+        return linkText;
     }
 }
