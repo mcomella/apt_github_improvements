@@ -5,6 +5,9 @@
 /*
  * Finds Bugzilla bugs within an issue and adds links to them at the
  * top of the page, since they are often used for dependency tracking.
+ *
+ * You can use https://github.com/mozilla-mobile/android-components/issues/158
+ * as a test page.
  */
 namespace FeatureLinkBugzillaBugs {
 
