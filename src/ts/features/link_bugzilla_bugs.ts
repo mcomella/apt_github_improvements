@@ -18,12 +18,11 @@ namespace FeatureLinkBugzillaBugs {
 
     export async function inject(preDiscussionsContainer: HTMLDivElement) {
         const bzLinks = extractBugzillaLinksFromComments();
+        if (bzLinks.length <= 0) { return; }
+
         const bugNumToLink = getBugNumberToLink(bzLinks);
         const bugSummaries = await getBugSummaries(bugNumToLink);
-
-        if (bugSummaries.length > 0) {
-            appendBugzillaDataToContainer(bugSummaries, preDiscussionsContainer);
-        }
+        appendBugzillaDataToContainer(bugSummaries, preDiscussionsContainer);
     }
 
     function extractBugzillaLinksFromComments(): HTMLAnchorElement[] {
