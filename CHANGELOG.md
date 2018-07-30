@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.2.1] - 2018-07-30
+### Fixed
+- #9: Only make requests to Bugzilla API on issues pages with Bugzilla links
+
 ## [0.2.0] - 2018-07-28
 ### Added
 - Hoist Bugzilla links to top of issues page
