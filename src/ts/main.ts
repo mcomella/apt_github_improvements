@@ -17,7 +17,7 @@ namespace Main {
         const Page = PageDetect;
         if (Page.isIssue() || Page.isPR()) {
             const preDiscussionsContainer = injectPreDiscussionsContainer();
-            await FeatureLinkBugzillaBugs.inject(preDiscussionsContainer);
+            await FeatureBugzillaHoistBugLinks.inject(preDiscussionsContainer);
         }
 
         if (Page.isMilestone()) {

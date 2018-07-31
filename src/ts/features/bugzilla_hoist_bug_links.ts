@@ -9,7 +9,7 @@
  * You can use https://github.com/mozilla-mobile/android-components/issues/158
  * as a test page.
  */
-namespace FeatureLinkBugzillaBugs {
+namespace FeatureBugzillaHoistBugLinks {
 
     interface BugLink extends BugzillaBugSummary {
         isPopulated: boolean,
