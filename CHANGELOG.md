@@ -6,6 +6,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 ### Fixed
+- #13: Bugzilla bugs whose info could not be fetched will appear with the
+correct bug number
 - #14: Improve performance when adding content to issues pages
 
 ## [0.2.1] - 2018-07-30
