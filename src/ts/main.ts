@@ -16,8 +16,9 @@ namespace Main {
 
         const Page = PageDetect;
         if (Page.isIssue() || Page.isPR()) {
-            const preDiscussionsContainer = injectPreDiscussionsContainer();
+            const preDiscussionsContainer = createContainer();
             await FeatureBugzillaHoistBugLinks.inject(preDiscussionsContainer);
+            injectPreDiscussionsContainer(preDiscussionsContainer);
         }
 
         if (Page.isMilestone()) {
@@ -32,15 +33,16 @@ namespace Main {
         }
     }
 
-    function injectPreDiscussionsContainer() {
+    function createContainer() {
         const container = document.createElement('div');
         container.id = ID_CONTAINER;
+        return container;
+    }
 
+    function injectPreDiscussionsContainer(container: HTMLDivElement) {
         const discussionsElement = document.querySelector('#discussion_bucket') as HTMLDivElement | null;
         if (discussionsElement && discussionsElement.parentNode) {
             discussionsElement.parentNode.insertBefore(container, discussionsElement);
         }
-
-        return container;
     }
 }
