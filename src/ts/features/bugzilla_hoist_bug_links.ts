@@ -101,7 +101,7 @@ namespace FeatureBugzillaHoistBugLinks {
 
     function getLinkText(link: BugLink): string {
         if (!link.isPopulated) {
-            return `Bug #${link.id}`;
+            return `Bug ${link.id}`;
         }
 
         // Sample: Backspace deletes wrong chunk when deleting autocompleted URL  | FIXED VERIFIED | 1471868
