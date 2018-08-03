@@ -67,7 +67,7 @@ namespace FeatureBugzillaHoistBugLinks {
             bugLinks.push({
                 isPopulated: false,
                 href: bugNumToLink[bugNum],
-                id: 0,
+                id: bugNum,
                 status: '',
                 summary: '',
                 resolution: '',
