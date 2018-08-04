@@ -3,6 +3,7 @@ The Android Product Team (APT) at Mozilla uses GitHub to develop their products 
 
 [Available on addons.mozilla.org][AMO]
 
+### Features
 For an overview of how we decide which features make it into the project, see [Feature Philosophy].
 
 Features for general GitHub users:
