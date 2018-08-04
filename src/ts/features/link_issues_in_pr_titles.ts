@@ -6,13 +6,21 @@
 namespace FeatureLinkIssuesInPRTitles {
 
     export function inject() {
-        // todo: mutation + don't do if done; next commit.
+        const titleElement = GithubPageIssue.getTitleElement();
+        const titleElementObserver = new MutationObserver(onTitleMutation);
+        titleElementObserver.observe(titleElement, {childList: true});
+
+        linkIssuesInTitle(titleElement);
+    }
+
+    function onTitleMutation(records: MutationRecord[], obs: MutationObserver) {
         const titleElement = GithubPageIssue.getTitleElement();
         linkIssuesInTitle(titleElement);
     }
 
     function linkIssuesInTitle(titleElement: HTMLSpanElement) {
-        if (titleElement.querySelector('a')) { // Someone, us?, has already added links.
+        if (titleElement.querySelector('a') || // Someone, us?, has already added links.
+                !GithubIssue.REGEX_NUMBER.test(titleElement.innerText)) { // Nothing to change.
             return;
         }
 
