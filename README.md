@@ -1,14 +1,18 @@
 # APT GitHub Improvements
-[Available on addons.mozilla.org.][AMO]
+The Android Product Team (APT) at Mozilla uses GitHub to develop their products and faces challenges with GitHub, both due to GitHub's existing functionality and the specifics of the APT workflow. APT GitHub Improvements is a browser extension that adds to the GitHub interface in order to address these problems.
 
-General features:
-- [Link Issue Numbers in Pull Request titles](docs/feature_link_issues_in_pr_titles.md)
+[Available on addons.mozilla.org][AMO]
 
-Features specific to Mozilla and the Android Product Team:
-- [Story Points](docs/feature_story_points.md)
-- [Hoist Bugzilla bug links to the top of the issue](docs/feature_hoist_bugzilla_bugs_to_top_of_issue.md)
+Features in APT GitHub Improvements can fit into two categories: features that are useful to the majority of general GitHub users and features that are specific to APT/Mozilla. For an overview of how we decide which features enter the extension, see [Feature Philosophy](docs/feature_philosophy.md).
 
-### Resources
+Features for general GitHub users:
+- [Link Issue Numbers in Pull Request titles](docs/features/link_issues_in_pr_titles.md)
+
+Features for APT/Mozilla:
+- [Story Points](docs/features/story_points.md)
+- [Hoist Bugzilla bug links to the top of the issue](docs/features/hoist_bugzilla_bugs_to_top_of_issue.md)
+
+### Project Resources
 * Open issues: https://github.com/mcomella/apt_github_improvements/issues
 * Documentation: https://github.com/mcomella/apt_github_improvements/tree/master/docs
 

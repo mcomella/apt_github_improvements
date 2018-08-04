@@ -2,7 +2,7 @@
 
 This feature helps solve the problem of, "How many days will it take to complete this milestone?"
 
-![Example of story points](im/feature_story_points_example.png)
+![Example of story points](im/story_points_example.png)
 
 ## Usage
 To use this feature, you'll first need to estimate, in days, how long it will take your team to complete each issue. Once you have an estimate, you should apply labels to each issue based on "T-shirt sizing": `size S` is an issue that can be fixed quickly, `size M` is larger, and `size L` is the largest.
