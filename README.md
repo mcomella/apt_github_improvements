@@ -3,18 +3,25 @@ The Android Product Team (APT) at Mozilla uses GitHub to develop their products 
 
 [Available on addons.mozilla.org][AMO]
 
-Features in APT GitHub Improvements can fit into two categories: features that are useful to the majority of general GitHub users and features that are specific to APT/Mozilla. For an overview of how we decide which features enter the extension, see [Feature Philosophy](docs/feature_philosophy.md).
+For an overview of how we decide which features make it into the project, see [Feature Philosophy].
 
 Features for general GitHub users:
 - [Link Issue Numbers in Pull Request titles](docs/features/link_issues_in_pr_titles.md)
 
-Features for APT/Mozilla:
+Features for APT/Mozilla specifically (these will generally not appear when the user is not on APT/Mozilla repositories):
 - [Story Points](docs/features/story_points.md)
 - [Hoist Bugzilla bug links to the top of the issue](docs/features/hoist_bugzilla_bugs_to_top_of_issue.md)
 
 ### Project Resources
 * Open issues: https://github.com/mcomella/apt_github_improvements/issues
 * Documentation: https://github.com/mcomella/apt_github_improvements/tree/master/docs
+
+## Differences from other solutions
+This extension adds unique functionality for Mozilla/APT so there are no existing solutions for this functionality. However, when considering this extension's features that address a general GitHub audience, there is some overlap.
+
+[Refined GitHub][rg] is a "browser extension that simplifies the GitHub interface and adds useful features" but has features that contradict APT GitHub Improvement's [Feature Philosophy]. Additionally, Refined GitHub requires you to be logged in and [has many dependencies][rg deps].
+
+There are other solutions that add/change GitHub functionality but they generally address a single user problem that does not overlap in scope with APT GitHub Improvements.
 
 ## Development
 Install the typescript compiler, `tsc`, with `npm` and build with:
@@ -52,3 +59,6 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 [typed]: https://github.com/DefinitelyTyped/DefinitelyTyped
 [temp addon]: https://developer.mozilla.org/en-US/docs/Tools/about:debugging#Enabling_add-on_debugging
 [AMO]: https://addons.mozilla.org/en-US/firefox/addon/apt-github-improvements/
+[rg]: https://github.com/sindresorhus/refined-github/
+[Feature Philosophy]: docs/feature_philosophy.md
+[rg deps]: https://gist.github.com/mcomella/d99838853cffb22347cc34a1b553d6ba
