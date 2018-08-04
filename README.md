@@ -4,9 +4,9 @@
 General features:
 - [Link Issue Numbers in Pull Request titles](docs/feature_link_issues_in_pr_titles.md)
 
-Features specific to the Android Product Team:
+Features specific to Mozilla and the Android Product Team:
 - [Story Points](docs/feature_story_points.md)
-- Hoist Bugzilla links in comments to the top of the issue
+- [Hoist Bugzilla bug links to the top of the issue](docs/feature_hoist_bugzilla_bugs_to_top_of_issue.md)
 
 ### Resources
 * Open issues: https://github.com/mcomella/apt_github_improvements/issues
