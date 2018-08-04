@@ -1,7 +1,10 @@
 # APT GitHub Improvements
 [Available on addons.mozilla.org.][AMO]
 
-It comes with several features including:
+General features:
+- [Link Issue Numbers in Pull Request titles](docs/feature_link_issues_in_pr_titles.md)
+
+Features specific to the Android Product Team:
 - [Story Points](docs/feature_story_points.md)
 - Hoist Bugzilla links in comments to the top of the issue
 
