@@ -1,4 +1,4 @@
-# GitHub Story Points
+# Feature: GitHub Story Points
 
 This feature helps solve the problem of, "How many days will it take to complete this milestone?"
 

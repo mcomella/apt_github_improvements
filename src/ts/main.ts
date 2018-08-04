@@ -15,6 +15,10 @@ namespace Main {
         removeAnyAddonContainers();
 
         const Page = PageDetect;
+        if (Page.isPR()) {
+            FeatureLinkIssuesInPRTitles.inject()
+        }
+
         if (Page.isIssue() || Page.isPR()) {
             const preDiscussionsContainer = createContainer();
             await FeatureBugzillaHoistBugLinks.inject(preDiscussionsContainer);
