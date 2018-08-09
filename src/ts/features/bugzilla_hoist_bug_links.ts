@@ -27,7 +27,7 @@ namespace FeatureBugzillaHoistBugLinks {
 
     function extractBugzillaLinksFromComments(): HTMLAnchorElement[] {
         const commentLinks = document.querySelectorAll(
-                `${GithubPageIssue.SELECTOR_COMMENT_BODY_VISIBLE} a`) as NodeListOf<HTMLAnchorElement>;
+                `${GithubDOMIssue.SELECTOR_COMMENT_BODY_VISIBLE} a`) as NodeListOf<HTMLAnchorElement>;
 
         return Array.from(commentLinks).filter(link => {
             return BugzillaURLs.is(link.href);

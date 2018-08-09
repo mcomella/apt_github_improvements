@@ -6,7 +6,7 @@
 namespace FeatureLinkIssuesInPRTitles {
 
     export function inject() {
-        const titleElement = GithubPageIssue.getTitleElement();
+        const titleElement = GithubDOMIssue.getTitleElement();
         const titleElementObserver = new MutationObserver(onTitleMutation);
         titleElementObserver.observe(titleElement, {childList: true});
 
@@ -14,7 +14,7 @@ namespace FeatureLinkIssuesInPRTitles {
     }
 
     function onTitleMutation(records: MutationRecord[], obs: MutationObserver) {
-        const titleElement = GithubPageIssue.getTitleElement();
+        const titleElement = GithubDOMIssue.getTitleElement();
         linkIssuesInTitle(titleElement);
     }
 

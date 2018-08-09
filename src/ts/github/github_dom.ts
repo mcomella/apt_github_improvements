@@ -3,9 +3,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 /*
- * Helpers for manipulating GitHub's issues pages.
+ * Helpers for manipulating GitHub's issues DOM.
  */
-namespace GithubPageIssue {
+namespace GithubDOMIssue {
 
     export const SELECTOR_ISSUE_TITLE = '.js-issue-title';
 
