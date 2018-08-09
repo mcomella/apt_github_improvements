@@ -21,6 +21,7 @@ namespace Main {
 
         if (Page.isIssue() || Page.isPR()) {
             const preDiscussionsContainer = createContainer();
+            FeatureLinkIssuesToPRs.inject(preDiscussionsContainer);
             await FeatureBugzillaHoistBugLinks.inject(preDiscussionsContainer);
             injectPreDiscussionsContainer(preDiscussionsContainer);
         }

@@ -18,3 +18,10 @@ namespace GithubDOMIssue {
         return document.querySelector(SELECTOR_ISSUE_TITLE) as HTMLSpanElement;
     }
 }
+
+namespace GithubDOMPR {
+
+    export function extractReferencedIssues() {
+
+    }
+}
