@@ -6,4 +6,14 @@
 namespace GithubIssue {
 
     export const REGEX_NUMBER = /#(\d+)/;
+    const REGEX_NUMBER_GLOBAL = new RegExp(REGEX_NUMBER, 'g');
+
+    export function getNumsFromStr(title: string): Set<number> {
+        const issueNumbers = new Set();
+        let match;
+        while ((match = REGEX_NUMBER_GLOBAL.exec(title)) !== null) {
+            issueNumbers.add(parseInt(match[1]));
+        }
+        return issueNumbers;
+    }
 }

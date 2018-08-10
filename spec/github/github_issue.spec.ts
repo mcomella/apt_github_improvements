@@ -28,4 +28,46 @@ describe('The GitHubIssue namespace', () => {
             expect(regexResult).toBeFalsy()
         });
     });
+
+    describe('will extract issue numbers from a string', () => {
+        it('unsuccessfully if there are no numbers', () => {
+            const titles = [
+                'Title',
+                'A simple title',
+                'This is cool #hashtag',
+                'ABC easy as 123',
+                'This is #e3 right?'
+            ];
+            titles.forEach(title => {
+                const actualValue = GithubIssue.getNumsFromStr(title);
+                expect(actualValue.size).toEqual(0);
+            })
+            expect(GithubIssue.getNumsFromStr(''))
+        });
+
+        it('successfully with "Issue" notation', () => {
+            const actualValue = GithubIssue.getNumsFromStr('Issue #345: Add readme.');
+            expect(actualValue.size).toEqual(1);
+            expect(actualValue).toContain(345)
+        });
+
+        it('successfully with "Closes" notation', () => {
+            const actualValue = GithubIssue.getNumsFromStr('Closes #345: Add readme.');
+            expect(actualValue.size).toEqual(1);
+        ;   expect(actualValue).toContain(345)
+        });
+
+        it('successfully with trailing notation', () => {
+            const actualValue = GithubIssue.getNumsFromStr('Add readme. (#345)');
+            expect(actualValue.size).toEqual(1);
+            expect(actualValue).toContain(345);
+        });
+
+        it('successfully for multiple issue numbers', () => {
+            const actualValue = GithubIssue.getNumsFromStr('Closes #345, Closes #567: Add readme.');
+            expect(actualValue.size).toEqual(2);
+            expect(actualValue).toContain(345);
+            expect(actualValue).toContain(567);
+        })
+    });
 });
