@@ -15,7 +15,7 @@ namespace GithubDOMIssue {
     export const SELECTOR_COMMENT_BODY_VISIBLE = `${SELECTOR_COMMENT_VISIBLE} .comment-body`;
 
     export function getTitleElement() {
-        return document.querySelector(SELECTOR_ISSUE_TITLE) as HTMLSpanElement;
+        return document.querySelector(SELECTOR_ISSUE_TITLE) as HTMLSpanElement | null;
     }
 }
 
