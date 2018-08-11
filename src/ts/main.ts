@@ -36,15 +36,20 @@ namespace Main {
     }
 
     async function storeReferencedIssuesInPR(referencedIssuesInPR: Set<number>): Promise<void> {
-        const prNumber = 4; // todo: get me.
-        const toSet = {} as NumToNumSet;
+        const prNumber = GithubURLs.getPRNumberFromURL(window.location);
+        if (!prNumber) {
+            Log.e('Unable to retrieve PR number from URL');
+            return;
+        }
+
+        const issuesToPRs = {} as NumToNumSet;
         referencedIssuesInPR.forEach(issueNum => {
-            toSet[issueNum] = new Set([prNumber]); // todo: each issue can be addressed by more PRs. fuck.
+            issuesToPRs[issueNum] = new Set([prNumber]);
         });
 
         const {ownerName, repoName} = PageDetect.getOwnerAndRepo();
         const store = await GithubStore.getStore(ownerName, repoName);
-        return store.mergeIssueToPRs(toSet);
+        return store.mergeIssueToPRs(issuesToPRs);
     }
 
     function removeAnyAddonContainers() {
