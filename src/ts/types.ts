@@ -2,15 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-type NumberToStr = { [index:number]: string }
+type NumToStr = { [index: number]: string; }
+type NumToNumSet = { [index: number]: Set<number> }
 
-interface ObjectNumberToNumber { [key: number]: number; }
-interface NumtoNumSet { [key: number]: Set<number> }
-
-interface ObjectStringToNumberSet { [key: string]: Set<number>; }
-
-interface StrToAny {
-    [key: string]: any;
-    prototype: object;
-    new: object;
-}
+type StrToAny = { [index: string]: any; }

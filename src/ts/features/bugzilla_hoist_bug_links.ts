@@ -34,8 +34,8 @@ namespace FeatureBugzillaHoistBugLinks {
         });
     }
 
-    function getBugNumberToLink(bzLinks: HTMLAnchorElement[]): NumberToStr {
-        const bugNumToLink: NumberToStr = {};
+    function getBugNumberToLink(bzLinks: HTMLAnchorElement[]): NumToStr {
+        const bugNumToLink: NumToStr = {};
         bzLinks.forEach(aElement => {
             const bugNumber = BugzillaURLs.getBugNumber(aElement.href);
             if (bugNumber) {
@@ -47,7 +47,7 @@ namespace FeatureBugzillaHoistBugLinks {
         return bugNumToLink;
     }
 
-    async function getBugSummaries(bugNumToLink: NumberToStr): Promise<BugLink[]> {
+    async function getBugSummaries(bugNumToLink: NumToStr): Promise<BugLink[]> {
         const bugNumbersToFetch = Object.keys(bugNumToLink).map(e => parseInt(e));
         const bugSummaries = await BugzillaAPI.fetchSummariesForBugNumbers(bugNumbersToFetch);
 

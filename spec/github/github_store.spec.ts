@@ -98,7 +98,7 @@ describe('A GithubStore', () => {
             const input = {
                 8: new Set(prsOne),
                 25: new Set(prsTwo),
-            } as NumtoNumSet;
+            } as NumToNumSet;
             await testStore.setIssuesToPRs(input);
 
             Object.keys(input).forEach(issueNum => {

@@ -50,10 +50,10 @@ class GithubStore {
         }
     }
 
-    async getIssuesToPRs(issueNums: number[]): Promise<NumtoNumSet> {
+    async getIssuesToPRs(issueNums: number[]): Promise<NumToNumSet> {
         const keysToFetch = issueNums.map(num => this.getKeyIssueToPR(num));
         const storedIssueToPRs = await this.storage.get(keysToFetch);
-        const returnValue = {} as NumtoNumSet;
+        const returnValue = {} as NumToNumSet;
         for (const key in storedIssueToPRs) {
             const issueNum = this.extractIssueNumFromKeyIssueToPR(key);
             if (!issueNum) {
@@ -82,7 +82,7 @@ class GithubStore {
         }
     }
 
-    setIssuesToPRs(issuesToPRs: NumtoNumSet): Promise<void> {
+    setIssuesToPRs(issuesToPRs: NumToNumSet): Promise<void> {
         const now = new Date();
         const toStore = {} as StrToAny;
         Object.keys(issuesToPRs).forEach(issueNumStr => {
