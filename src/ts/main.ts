@@ -37,14 +37,14 @@ namespace Main {
 
     async function storeReferencedIssuesInPR(referencedIssuesInPR: Set<number>): Promise<void> {
         const prNumber = 4; // todo: get me.
-        const toSet = {} as NumtoNumSet;
+        const toSet = {} as NumToNumSet;
         referencedIssuesInPR.forEach(issueNum => {
             toSet[issueNum] = new Set([prNumber]); // todo: each issue can be addressed by more PRs. fuck.
         });
 
         const {ownerName, repoName} = PageDetect.getOwnerAndRepo();
         const store = await GithubStore.getStore(ownerName, repoName);
-        return store.setIssuesToPRs(toSet);
+        return store.mergeIssueToPRs(toSet);
     }
 
     function removeAnyAddonContainers() {

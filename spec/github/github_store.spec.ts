@@ -84,60 +84,105 @@ describe('A GithubStore', () => {
         });
     });
 
-    describe('when setting issues to PRs', () => {
-        it('sets one issue to multiple PRs', async () => {
-            const prs = [456, 987];
-            const input = {8: new Set(prs)};
-            await testStore.setIssuesToPRs(input);
+    describe('when merging issues to PRs', () => {
+        it('given an empty DB, will save an issue', async () => {
+            const input = {} as NumToNumSet;
+            input[4] = new Set([1, 2, 3]);
+            await testStore.mergeIssueToPRs(input);
 
-            const actual = backingData[getKeyIssueToPR(8)] as number[];
-            expect(actual.length).toEqual(2);
-            prs.forEach(pr => expect(actual).toContain(pr, pr));
+            const actualValue = backingData[getKeyIssueToPR(4)];
+            expect(actualValue).toEqual(new Set([1, 2, 3]));
         });
 
-        it('sets multiple issues to multiple PRs', async () => {
-            const prsOne = [456, 987];
-            const prsTwo = [700, 1010];
+        it('given an empty DB, will save multiple issues', async () => {
+            const prs4 = new Set([2, 3, 4]);
+            const prs10 = new Set([2, 5, 8]);
             const input = {
-                8: new Set(prsOne),
-                25: new Set(prsTwo),
-            } as NumToNumSet;
-            await testStore.setIssuesToPRs(input);
-
-            Object.keys(input).forEach(issueNumStr => {
-                const issueNum = parseInt(issueNumStr);
-                const key = getKeyIssueToPR(issueNum);
-                const prs = input[issueNum]!;
-
-                const actual = backingData[key];
-                expect(actual.length).toBe(prs.size);
-                prs.forEach(pr => expect(actual).toContain(pr, `${key} ${pr}`));
-            });
-        });
-
-        it('updates the PRs\' last updated time for all PRs', async () => {
-            const prsOne = [456, 987];
-            const prsTwo = [456, 100];
-            const input = {
-                8: new Set(prsOne),
-                10: new Set(prsTwo),
+                4: prs4,
+                10: prs10,
             };
+            await testStore.mergeIssueToPRs(input);
+
+            const actual4 = backingData[getKeyIssueToPR(4)];
+            expect(actual4).toEqual(new Set([2, 3, 4]));
+            const actual10 = backingData[getKeyIssueToPR(10)];
+            expect(actual10).toEqual(new Set([2, 5, 8]));
+        });
+
+        it('given existing data for the same issue, will union the new PRs', async () => {
+            const key = getKeyIssueToPR(4);
+            backingData[key] = [1, 2];
+            const input = {4: new Set([2, 3, 4])};
+            await testStore.mergeIssueToPRs(input);
+
+            const actualValue = backingData[key];
+            expect(actualValue).toEqual(new Set([1, 2, 3, 4]));
+        });
+
+        it('given an empty object, will take no action', async () => {
+            await testStore.mergeIssueToPRs({});
+            expect(Object.keys(backingData).length).toBe(0);
+        });
+
+        it('given an issue with no PRs, will take no action', async () => {
+            await testStore.mergeIssueToPRs({4: new Set()});
+            expect(Object.keys(backingData).length).toBe(0);
+        });
+
+        it('given one issue num, will update the PRs\' last updated time', async () => {
+            const prs = [1, 20];
 
             const before = new Date();
-            await testStore.setIssuesToPRs(input);
+            await testStore.mergeIssueToPRs({4: new Set(prs)});
             const after = new Date();
 
-            prsOne.concat(prsTwo).forEach(pr => {
-                const key = getKeyPRLastUpdate(pr);
-                const lastUpdate = backingData[key];
-                expect(lastUpdate <= after).toBeTruthy(pr);
-                expect(lastUpdate >= before).toBeTruthy(pr);
+            prs.forEach(prNum => {
+                const key = getKeyPRLastUpdate(prNum);
+                expect(backingData[key] >= before).toBeTruthy();
+                expect(backingData[key] <= after).toBeTruthy();
             });
         });
 
-        it('won\'t store an empty PR list', async () => {
-            await testStore.setIssuesToPRs({1: new Set()});
-            expect(Object.keys(backingData).length).toBe(0);
+        it('will update the PRs\' last updated time to the same time', async () => {
+            await testStore.mergeIssueToPRs({4: new Set([1, 20])});
+
+            const left = backingData[getKeyPRLastUpdate(1)];
+            const right = backingData[getKeyPRLastUpdate(20)];
+            expect(left).toBeTruthy();
+            expect(left).toBe(right);
+        });
+
+        it('given one issue num, will update the PRs\' last updated time', async () => {
+            const prs = [1, 20];
+
+            const before = new Date();
+            await testStore.mergeIssueToPRs({4: new Set(prs)});
+            const after = new Date();
+
+            prs.forEach(prNum => {
+                const key = getKeyPRLastUpdate(prNum);
+                expect(backingData[key] >= before).toBeTruthy();
+                expect(backingData[key] <= after).toBeTruthy();
+            });
+        });
+
+        it('given multiple issue nums, will update the PRs\' last updated time', async () => {
+            const prsLeft = new Set([1, 20]);
+            const prsRight = new Set([487, 360, 20]);
+            const prs = prsLeft.union(prsRight);
+
+            const before = new Date();
+            await testStore.mergeIssueToPRs({
+                4: new Set(prsLeft),
+                12: new Set(prsRight),
+            });
+            const after = new Date();
+
+            prs.forEach(prNum => {
+                const key = getKeyPRLastUpdate(prNum);
+                expect(backingData[key] >= before).toBeTruthy();
+                expect(backingData[key] <= after).toBeTruthy();
+            });
         });
     });
 

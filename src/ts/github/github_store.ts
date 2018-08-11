@@ -82,22 +82,34 @@ class GithubStore {
         }
     }
 
-    setIssuesToPRs(issuesToPRs: NumToNumSet): Promise<void> {
+    async mergeIssueToPRs(remoteIssueToOpenPRs: NumToNumSet): Promise<void> {
+        const issueNumsToFetch = Object.keys(remoteIssueToOpenPRs).map(parseInt);
+        if (issueNumsToFetch.length <= 0) { return Promise.resolve(); }
+
         const now = new Date();
+        const storedIssueToPRs = await this.getIssuesToPRs(issueNumsToFetch);
         const toStore = {} as StrToAny;
-        Object.keys(issuesToPRs).forEach(issueNumStr => {
-            const issueNum = parseInt(issueNumStr);
-            const prs = Array.from(issuesToPRs[issueNum]!);
-            if (prs.length === 0) { return; }
+        for (const issueNum in remoteIssueToOpenPRs) {
+            const remoteOpenPRs = remoteIssueToOpenPRs[issueNum]!;
+            if (remoteOpenPRs.size <= 0) { return; }
 
-            const keyIssueToPRs = this.getKeyIssueToPR(issueNum);
-            toStore[keyIssueToPRs] = prs;
+            const storedOpenPRs = storedIssueToPRs[issueNum];
+            let mergedOpenPRs: Set<number>;
+            if (storedOpenPRs) {
+                mergedOpenPRs = remoteOpenPRs.union(storedOpenPRs);
+            } else {
+                mergedOpenPRs = remoteOpenPRs;
+            }
 
-            prs.forEach(pr => {
-                const keyPRLastUpdated = this.getKeyPRLastUpdated(pr);
+            const keyIssueToPR = this.getKeyIssueToPR(parseInt(issueNum));
+            toStore[keyIssueToPR] = mergedOpenPRs;
+
+            const remotePRLastUpdatedKeys = Array.from(remoteOpenPRs).map(pr => { return this.getKeyPRLastUpdated(pr); });
+            remotePRLastUpdatedKeys.forEach(keyPRLastUpdated => {
                 toStore[keyPRLastUpdated] = now;
             });
-        });
+        }
+
         return this.storage.set(toStore);
     }
 
