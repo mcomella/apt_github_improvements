@@ -106,7 +106,7 @@ namespace FeatureBugzillaHoistBugLinks {
 
         // Sample: Backspace deletes wrong chunk when deleting autocompleted URL  | FIXED VERIFIED | 1471868
         var linkText = `${link.summary} | ${link.status}`;
-        if (!StringUtils.isBlank(link.resolution)) {
+        if (!link.resolution.isBlank()) {
             linkText += ` ${link.resolution}`;
         }
         linkText += ` | ${link.id}`;

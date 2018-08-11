@@ -2,9 +2,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-namespace StringUtils {
+interface String {
+    isBlank(): boolean;
+}
 
-    export function isBlank(str: string): boolean {
-        return !str.trim();
-    }
+String.prototype.isBlank = function() {
+    return !this.trim();
 }

@@ -9,7 +9,7 @@ describe('StringUtils', () => {
             '   ',
             '',
         ].forEach(str => {
-            expect(StringUtils.isBlank(str)).toBeTruthy(str);
+            expect(str.isBlank()).toBeTruthy(str);
         });
     });
 
@@ -22,7 +22,7 @@ describe('StringUtils', () => {
             ' h ',
             ' . ',
         ].forEach(str => {
-            expect(StringUtils.isBlank(str)).toBeFalsy(str);
+            expect(str.isBlank()).toBeFalsy(str);
         });
     });
 });
