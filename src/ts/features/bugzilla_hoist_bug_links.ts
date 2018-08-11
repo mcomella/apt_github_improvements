@@ -78,25 +78,12 @@ namespace FeatureBugzillaHoistBugLinks {
     }
 
     function appendBugzillaDataToContainer(bzLinks: BugLink[], container: HTMLDivElement) {
-        const titleElement = document.createElement('p');
-        titleElement.textContent = "Bugzilla bugs referenced in this issue:"
-        titleElement.style.marginBottom = '0px'; // override GH style.
-        container.appendChild(titleElement);
-
-        const unorderedListElement = document.createElement('ul');
-        unorderedListElement.style.paddingLeft = '40px';
-        unorderedListElement.style.marginBottom = '14px';
-        container.appendChild(unorderedListElement);
-
-        bzLinks.forEach(link => {
-            const listItemElement = document.createElement('li');
-            unorderedListElement.appendChild(listItemElement);
-
-            const linkElement = document.createElement('a');
-            linkElement.href = link.href;
-            linkElement.text = getLinkText(link);
-            listItemElement.appendChild(linkElement);
+        const title = 'Bugzilla bugs referenced in this issue:';
+        const docFrag = DOM.getTitleLinkList(title, bzLinks, (linkElement: HTMLAnchorElement, bzLink: BugLink) => {
+            linkElement.href = bzLink.href;
+            linkElement.text = getLinkText(bzLink);
         });
+        container.appendChild(docFrag);
     }
 
     function getLinkText(link: BugLink): string {
