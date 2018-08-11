@@ -31,4 +31,18 @@ describe('The GitHubURLs namespace', () => {
             expect(actual).toBeNull();
         });
     });
+
+    describe('when getting an issue number from a URL', () => {
+        it('will get a number for an issue URL', () => {
+            const location = {pathname: '/mozilla-mobile/focus-android/issues/3108'} as Location;
+            const actual = GithubURLs.getIssueNumberFromURL(location);
+            expect(actual).toBe(3108);
+        });
+
+        it('will get null for a PR URL', () => {
+            const location = {pathname: '/mozilla-mobile/focus-android/pull/3091'} as Location;
+            const actual = GithubURLs.getIssueNumberFromURL(location);
+            expect(actual).toBeNull();
+        });
+    });
 });

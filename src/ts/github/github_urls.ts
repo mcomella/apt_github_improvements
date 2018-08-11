@@ -5,10 +5,18 @@
 /** Helpers for manipulating GitHub URLs. */
 namespace GithubURLs {
 
+    const RE_ISSUE_URL = /issues\/(\d+)$/;
     const RE_PR_URL = /pull\/(\d+)$/;
 
     export function issueFromNumber(owner: string, repo: string, issueNumber: number): string {
         return `https://github.com/${owner}/${repo}/issues/${issueNumber}`;
+    }
+
+    // sample: https://github.com/mcomella/apt_github_improvements/issues/4
+    export function getIssueNumberFromURL(url: Location): number | null {
+        const match = url.pathname.match(RE_ISSUE_URL);
+        if (!match) { return null; }
+        return parseInt(match[1]);
     }
 
     // sample: https://github.com/mozilla-mobile/focus-android/pull/3091
