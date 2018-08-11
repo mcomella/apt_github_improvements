@@ -12,6 +12,7 @@
 
     "permissions": [
         "*://bugzilla.mozilla.org/rest/*",
-        "webRequest"
+        "webRequest",
+        "storage"
     ]
 }
