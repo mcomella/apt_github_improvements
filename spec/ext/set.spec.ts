@@ -34,8 +34,14 @@ describe('Set', () => {
             const two = new Set([4, 5, 6]);
             const expected = new Set([1, 2, 3, 4, 5, 6]);
             one.unionMutate(two);
-            // const actual = SetUtils.union(one, two);
             expect(one.equals(expected)).toBeTruthy();
+        });
+
+        it('two sets without modifying the second set', () => {
+            const one = new Set([1, 2]);
+            const two = new Set([4, 5]);
+            one.unionMutate(two);
+            expect(two.equals(new Set([4, 5]))).toBeTruthy();
         });
 
         it('one set and one empty set', () => {
@@ -49,6 +55,24 @@ describe('Set', () => {
             const one = new Set();
             one.unionMutate(new Set());
             expect(one.equals(new Set())).toBeTruthy();
+        });
+    });
+
+    describe('can union', () => {
+        it('two sets', () => {
+            const one = new Set([1, 2, 3]);
+            const two = new Set([4, 5, 6]);
+            const expected = new Set([1, 2, 3, 4, 5, 6]);
+            const actual = one.union(two);
+            expect(actual.equals(expected)).toBeTruthy();
+        });
+
+        it('two sets without mutating either of them', () => {
+            const one = new Set([1, 2, 3]);
+            const two = new Set([4, 5, 6]);
+            one.union(two);
+            expect(one.equals(new Set([1, 2, 3]))).toBeTruthy();
+            expect(two.equals(new Set([4, 5, 6]))).toBeTruthy();
         });
     });
 });

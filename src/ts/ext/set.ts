@@ -3,8 +3,9 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 interface Set<T> {
-    unionMutate(setRight: Set<T>): void;
     equals(setRight: Set<T>): boolean;
+    unionMutate(setRight: Set<T>): void;
+    union(setRight: Set<T>): Set<T>;
 }
 
 // inspired by https://stackoverflow.com/a/31129384
@@ -18,3 +19,9 @@ Set.prototype.equals = function <T> (setRight: Set<T>): boolean {
 Set.prototype.unionMutate = function <T> (setRight: Set<T>) {
     setRight.forEach(e => this.add(e));
 };
+
+Set.prototype.union = function <T> (setRight: Set<T>): Set<T> {
+    const unionSet = new Set(this);
+    unionSet.unionMutate(setRight);
+    return unionSet;
+}
