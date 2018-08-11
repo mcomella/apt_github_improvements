@@ -37,6 +37,50 @@ describe('A GithubStore', () => {
         expect(backingData[Store.KEY_DB_VERSION]).toEqual(Store.DB_VERSION)
     });
 
+    describe('when getting PRs from issue numbers', () => {
+        it('gets the PRs for issues that are in the DB', async () => {
+            const prs42 = [87, 53];
+            const prs56 = [123, 451];
+            backingData['ghs-issue-moz/fire/42'] = prs42;
+            backingData['ghs-issue-moz/fire/56'] = prs56;
+            const actual = await testStore.getIssuesToPRs([42, 56]);
+
+            expect(Object.keys(actual).length).toBe(2);
+            expect(actual[42].equals(new Set(prs42))).toBeTruthy();
+            expect(actual[56].equals(new Set(prs56))).toBeTruthy();
+        });
+
+        it('gets the PRs for issues that are in the DB but does not get PRs for issues that aren\'t', async () => {
+            const prs = [123, 654];
+            backingData['ghs-issue-moz/fire/42'] = prs;
+            const actual = await testStore.getIssuesToPRs([42, 56]);
+
+            expect(Object.keys(actual).length).toBe(1);
+            expect(actual[42].equals(new Set(prs))).toBeTruthy();
+        });
+
+        it('given an empty DB, returns an empty object', async () => {
+            const actual = await testStore.getIssuesToPRs([1, 2]);
+            expect(Object.keys(actual).length).toBe(0);
+        });
+    });
+
+    describe('when getting PRs from an issue number', () => {
+        it('gets the PRs for an issue in the DB', async () => {
+            const prs = [87, 53];
+            backingData['ghs-issue-moz/fire/42'] = prs;
+            const actual = await testStore.getIssueToPRs(42);
+
+            expect(actual.size).toBe(2);
+            prs.forEach(pr => expect(actual).toContain(pr, pr));
+        });
+
+        it('given an empty DB, returns an empty set', async () => {
+            const actual = await testStore.getIssueToPRs(1);
+            expect(actual.size).toBe(0);
+        });
+    });
+
     describe('when setting issues to PRs', () => {
         it('sets one issue to multiple PRs', async () => {
             const prs = [456, 987];
@@ -106,7 +150,9 @@ describe('A GithubStore', () => {
 
                 const returnValue = {} as StrToAny;
                 keys.forEach(key => {
-                    returnValue[key] = backingData[key];
+                    if (backingData[key]) {
+                        returnValue[key] = backingData[key];
+                    }
                 });
                 return Promise.resolve(returnValue);
             },

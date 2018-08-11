@@ -18,6 +18,8 @@ class GithubStore {
     protected static readonly DB_VERSION = 1;
     protected static readonly KEY_DB_VERSION = `${GithubStore.PREFIX_KEY}-v`
 
+    private static readonly RE_KEY_ISSUE_TO_PR = /([0-9]+)$/
+
     private readonly owner: string;
     private readonly repo: string;
     private readonly ownerRepo: string;
@@ -45,6 +47,38 @@ class GithubStore {
             await this.storage.set(storageObj);
         } else if (dbVersion !== GithubStore.DB_VERSION) {
             // Upgrade for future versions...
+        }
+    }
+
+    async getIssuesToPRs(issueNums: number[]): Promise<NumtoNumSet> {
+        const keysToFetch = issueNums.map(num => this.getKeyIssueToPR(num));
+        const storedIssueToPRs = await this.storage.get(keysToFetch);
+        const returnValue = {} as NumtoNumSet;
+        for (const key in storedIssueToPRs) {
+            const issueNum = this.extractIssueNumFromKeyIssueToPR(key);
+            if (!issueNum) {
+                // todo: surface to user for bug report?
+                Log.e(`key ${key} does not have issue number`);
+            } else {
+                returnValue[issueNum] = new Set(storedIssueToPRs[key]);
+            }
+        }
+        return returnValue;
+    }
+
+    private extractIssueNumFromKeyIssueToPR(key: string): number | null {
+        const matches = GithubStore.RE_KEY_ISSUE_TO_PR.exec(key);
+        if (!matches) { return null; }
+        return parseInt(matches[1]);
+    }
+
+    async getIssueToPRs(issueNum: number): Promise<Set<number>> {
+        const issuesToPRs = await this.getIssuesToPRs([issueNum]);
+        const prs = issuesToPRs[issueNum];
+        if (prs) {
+            return prs;
+        } else {
+            return new Set();
         }
     }
 
