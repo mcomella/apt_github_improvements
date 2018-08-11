@@ -18,6 +18,16 @@ describe('The GitHubURLs namespace', () => {
         expect(actual).toBe(expected);
     });
 
+    it('can create a url from a pr number', () => {
+        const owner = 'mozilla';
+        const repo = 'firefox';
+        const prNumber = 10;
+        const expected = `https://github.com/${owner}/${repo}/pull/${prNumber}`;
+
+        const actual = GithubURLs.prFromNumber(owner, repo, prNumber);
+        expect(actual).toBe(expected);
+    });
+
     describe('when getting a PR number from a URL', () => {
         it('will get a number for a PR URL', () => {
             const location = {pathname: '/mozilla-mobile/focus-android/pull/3091'} as Location;
