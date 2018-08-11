@@ -15,10 +15,10 @@ namespace Main {
         removeAnyAddonContainers();
 
         const Page = PageDetect;
-        let referencedIssuesInPR = new Set();
+        let referencedIssuesInPR = new Set<number>();
         if (Page.isPR()) {
             referencedIssuesInPR = GithubDOMPR.extractReferencedIssues();
-            // todo: store.
+            await storeReferencedIssuesInPR(referencedIssuesInPR); // synchronous so later calls can use DB.
 
             FeatureLinkIssuesInPRTitles.inject()
         }
@@ -33,6 +33,18 @@ namespace Main {
         if (Page.isMilestone()) {
             FeatureStoryPoints.inject();
         }
+    }
+
+    async function storeReferencedIssuesInPR(referencedIssuesInPR: Set<number>): Promise<void> {
+        const prNumber = 4; // todo: get me.
+        const toSet = {} as NumtoNumSet;
+        referencedIssuesInPR.forEach(issueNum => {
+            toSet[issueNum] = new Set([prNumber]); // todo: each issue can be addressed by more PRs. fuck.
+        });
+
+        const {ownerName, repoName} = PageDetect.getOwnerAndRepo();
+        const store = await GithubStore.getStore(ownerName, repoName);
+        return store.setIssuesToPRs(toSet);
     }
 
     function removeAnyAddonContainers() {

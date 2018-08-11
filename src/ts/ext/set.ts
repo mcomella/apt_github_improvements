@@ -3,16 +3,8 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 interface Set<T> {
-    equals(setRight: Set<T>): boolean;
     unionMutate(setRight: Set<T>): void;
     union(setRight: Set<T>): Set<T>;
-}
-
-// inspired by https://stackoverflow.com/a/31129384
-Set.prototype.equals = function <T> (setRight: Set<T>): boolean {
-    if (this.size !== setRight.size) return false;
-    for (let left of this) if (!setRight.has(left)) return false;
-    return true;
 }
 
 // inspired by https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set#Implementing_basic_set_operations
