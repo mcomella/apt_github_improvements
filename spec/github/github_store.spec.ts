@@ -17,6 +17,9 @@ class MockGithubStore extends GithubStore {
 
 describe('A GithubStore', () => {
 
+    const ORG = 'moz';
+    const REPO = 'fire';
+
     const Store = MockGithubStore;
 
     let testStore: MockGithubStore;
@@ -28,7 +31,7 @@ describe('A GithubStore', () => {
         backingData = storageContainer.backingData;
         mockStorage = storageContainer.mockStore;
 
-        testStore = new MockGithubStore('moz', 'fire', mockStorage);
+        testStore = new MockGithubStore(ORG, REPO, mockStorage);
     });
 
     it('inits the DB with the current version when empty', async () => {
@@ -41,8 +44,8 @@ describe('A GithubStore', () => {
         it('gets the PRs for issues that are in the DB', async () => {
             const prs42 = [87, 53];
             const prs56 = [123, 451];
-            backingData['ghs-issue-moz/fire/42'] = prs42;
-            backingData['ghs-issue-moz/fire/56'] = prs56;
+            backingData[getKeyIssueToPR(42)] = prs42;
+            backingData[getKeyIssueToPR(56)] = prs56;
             const actual = await testStore.getIssuesToPRs([42, 56]);
 
             expect(Object.keys(actual).length).toBe(2);
@@ -52,7 +55,7 @@ describe('A GithubStore', () => {
 
         it('gets the PRs for issues that are in the DB but does not get PRs for issues that aren\'t', async () => {
             const prs = [123, 654];
-            backingData['ghs-issue-moz/fire/42'] = prs;
+            backingData[getKeyIssueToPR(42)] = prs;
             const actual = await testStore.getIssuesToPRs([42, 56]);
 
             expect(Object.keys(actual).length).toBe(1);
@@ -68,7 +71,7 @@ describe('A GithubStore', () => {
     describe('when getting PRs from an issue number', () => {
         it('gets the PRs for an issue in the DB', async () => {
             const prs = [87, 53];
-            backingData['ghs-issue-moz/fire/42'] = prs;
+            backingData[getKeyIssueToPR(42)] = prs;
             const actual = await testStore.getIssueToPRs(42);
 
             expect(actual.size).toBe(2);
@@ -87,7 +90,7 @@ describe('A GithubStore', () => {
             const input = {8: new Set(prs)};
             await testStore.setIssuesToPRs(input);
 
-            const actual = backingData['ghs-issue-moz/fire/8'] as number[];
+            const actual = backingData[getKeyIssueToPR(8)] as number[];
             expect(actual.length).toEqual(2);
             prs.forEach(pr => expect(actual).toContain(pr, pr));
         });
@@ -101,9 +104,10 @@ describe('A GithubStore', () => {
             } as NumToNumSet;
             await testStore.setIssuesToPRs(input);
 
-            Object.keys(input).forEach(issueNum => {
-                const key = `ghs-issue-moz/fire/${issueNum}`;
-                const prs = input[parseInt(issueNum)]!;
+            Object.keys(input).forEach(issueNumStr => {
+                const issueNum = parseInt(issueNumStr);
+                const key = getKeyIssueToPR(issueNum);
+                const prs = input[issueNum]!;
 
                 const actual = backingData[key];
                 expect(actual.length).toBe(prs.size);
@@ -124,7 +128,7 @@ describe('A GithubStore', () => {
             const after = new Date();
 
             prsOne.concat(prsTwo).forEach(pr => {
-                const key = `ghs-prLastUpdate-moz/fire/${pr}`;
+                const key = getKeyPRLastUpdate(pr);
                 const lastUpdate = backingData[key];
                 expect(lastUpdate <= after).toBeTruthy(pr);
                 expect(lastUpdate >= before).toBeTruthy(pr);
@@ -168,5 +172,13 @@ describe('A GithubStore', () => {
             backingData: backingData,
             mockStore: mockStore,
         };
+    }
+
+    function getKeyIssueToPR(issueNum: number): string {
+        return `ghs-issue-${ORG}/${REPO}/${issueNum}`;
+    }
+
+    function getKeyPRLastUpdate(prNum: number): string {
+        return `ghs-prLastUpdate-${ORG}/${REPO}/${prNum}`;
     }
 });
