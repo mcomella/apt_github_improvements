@@ -3,3 +3,14 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 type NumberToStr = { [index:number]: string }
+
+interface ObjectNumberToNumber { [key: number]: number; }
+interface ObjectNumberToNumberSet { [key: number]: Set<number>; }
+
+interface ObjectStringToNumberSet { [key: string]: Set<number>; }
+
+interface StrToAny {
+    [key: string]: any;
+    prototype: object;
+    new: object;
+}
