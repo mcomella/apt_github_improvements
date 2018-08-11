@@ -53,7 +53,7 @@ namespace FeatureBugzillaHoistBugLinks {
 
         const bugLinks = bugSummaries.map(bug => { return {
             isPopulated: true,
-            href: bugNumToLink[bug.id],
+            href: bugNumToLink[bug.id]!,
             id: bug.id,
             status: bug.status,
             summary: bug.summary,
@@ -66,7 +66,7 @@ namespace FeatureBugzillaHoistBugLinks {
         missingBugNumbers.forEach(bugNum => {
             bugLinks.push({
                 isPopulated: false,
-                href: bugNumToLink[bugNum],
+                href: bugNumToLink[bugNum]!,
                 id: bugNum,
                 status: '',
                 summary: '',

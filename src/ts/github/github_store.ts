@@ -87,7 +87,7 @@ class GithubStore {
         const toStore = {} as StrToAny;
         Object.keys(issuesToPRs).forEach(issueNumStr => {
             const issueNum = parseInt(issueNumStr);
-            const prs = Array.from(issuesToPRs[issueNum]);
+            const prs = Array.from(issuesToPRs[issueNum]!);
             if (prs.length === 0) { return; }
 
             const keyIssueToPRs = this.getKeyIssueToPR(issueNum);

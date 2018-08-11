@@ -46,8 +46,8 @@ describe('A GithubStore', () => {
             const actual = await testStore.getIssuesToPRs([42, 56]);
 
             expect(Object.keys(actual).length).toBe(2);
-            expect(actual[42].equals(new Set(prs42))).toBeTruthy();
-            expect(actual[56].equals(new Set(prs56))).toBeTruthy();
+            expect(actual[42]!.equals(new Set(prs42))).toBeTruthy();
+            expect(actual[56]!.equals(new Set(prs56))).toBeTruthy();
         });
 
         it('gets the PRs for issues that are in the DB but does not get PRs for issues that aren\'t', async () => {
@@ -56,7 +56,7 @@ describe('A GithubStore', () => {
             const actual = await testStore.getIssuesToPRs([42, 56]);
 
             expect(Object.keys(actual).length).toBe(1);
-            expect(actual[42].equals(new Set(prs))).toBeTruthy();
+            expect(actual[42]!.equals(new Set(prs))).toBeTruthy();
         });
 
         it('given an empty DB, returns an empty object', async () => {
@@ -103,7 +103,7 @@ describe('A GithubStore', () => {
 
             Object.keys(input).forEach(issueNum => {
                 const key = `ghs-issue-moz/fire/${issueNum}`;
-                const prs = input[parseInt(issueNum)];
+                const prs = input[parseInt(issueNum)]!;
 
                 const actual = backingData[key];
                 expect(actual.length).toBe(prs.size);
