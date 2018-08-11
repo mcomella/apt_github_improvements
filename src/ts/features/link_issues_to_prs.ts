@@ -7,11 +7,11 @@
  */
 namespace FeatureLinkIssuesToPRs {
 
-    export function inject(containerElement: HTMLDivElement, referencedIssuesInPR: Set<number>) {
+    export async function inject(containerElement: HTMLDivElement, referencedIssuesInPR: Set<number>): Promise<void> {
         if (PageDetect.isPR()) {
             injectPRPage(containerElement, referencedIssuesInPR);
         } else if (PageDetect.isIssue()) {
-            injectIssuePage();
+            await injectIssuePage(containerElement);
         }
     }
 
@@ -29,7 +29,24 @@ namespace FeatureLinkIssuesToPRs {
         containerElement.appendChild(docFrag);
     }
 
-    function injectIssuePage() {
+    async function injectIssuePage(containerElement: HTMLDivElement) {
+        const pageIssueNum = GithubURLs.getIssueNumberFromURL(window.location);
+        if (!pageIssueNum) {
+            Log.e('Unable to get issue number from URL');
+            return;
+        }
 
+        const {ownerName, repoName} = PageDetect.getOwnerAndRepo();
+        const store = await GithubStore.getStore(ownerName, repoName);
+        const prsForIssue = await store.getIssueToPRs(pageIssueNum);
+        if (prsForIssue.size <= 0) { return; }
+
+        const prsArray = Array.from(prsForIssue);
+        const docFrag = DOM.getTitleLinkList('PRs which reference this issue:', prsArray, (linkElement: HTMLAnchorElement, prNum: number) => {
+            linkElement.text = `#${prNum}`;
+            linkElement.href = GithubURLs.prFromNumber(ownerName, repoName, prNum);
+        });
+
+        containerElement.appendChild(docFrag);
     }
 }
