@@ -20,11 +20,13 @@ class GithubStore {
 
     private readonly owner: string;
     private readonly repo: string;
+    private readonly ownerRepo: string;
     private readonly storage: StorageArea;
 
     protected constructor(owner: string, repo: string, _storage?: StorageArea) {
         this.owner = owner;
         this.repo = repo;
+        this.ownerRepo = `${owner}/${repo}`;
         if (!_storage) {
             this.storage = browser.storage.local;
         } else {
@@ -44,5 +46,32 @@ class GithubStore {
         } else if (dbVersion !== GithubStore.DB_VERSION) {
             // Upgrade for future versions...
         }
+    }
+
+    setIssuesToPRs(issuesToPRs: NumtoNumSet): Promise<void> {
+        const now = new Date();
+        const toStore = {} as StrToAny;
+        Object.keys(issuesToPRs).forEach(issueNumStr => {
+            const issueNum = parseInt(issueNumStr);
+            const prs = Array.from(issuesToPRs[issueNum]);
+            if (prs.length === 0) { return; }
+
+            const keyIssueToPRs = this.getKeyIssueToPR(issueNum);
+            toStore[keyIssueToPRs] = prs;
+
+            prs.forEach(pr => {
+                const keyPRLastUpdated = this.getKeyPRLastUpdated(pr);
+                toStore[keyPRLastUpdated] = now;
+            });
+        });
+        return this.storage.set(toStore);
+    }
+
+    protected getKeyPRLastUpdated(prNum: number): string {
+        return `${GithubStore.PREFIX_KEY}-prLastUpdate-${this.ownerRepo}/${prNum}`;
+    }
+
+    protected getKeyIssueToPR(issueNum: number): string {
+        return `${GithubStore.PREFIX_KEY}-issue-${this.ownerRepo}/${issueNum}`;
     }
 }

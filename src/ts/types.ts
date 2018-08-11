@@ -5,7 +5,7 @@
 type NumberToStr = { [index:number]: string }
 
 interface ObjectNumberToNumber { [key: number]: number; }
-interface ObjectNumberToNumberSet { [key: number]: Set<number>; }
+interface NumtoNumSet { [key: number]: Set<number> }
 
 interface ObjectStringToNumberSet { [key: string]: Set<number>; }
 
