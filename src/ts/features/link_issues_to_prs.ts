@@ -9,13 +9,24 @@ namespace FeatureLinkIssuesToPRs {
 
     export function inject(containerElement: HTMLDivElement, referencedIssuesInPR: Set<number>) {
         if (PageDetect.isPR()) {
-            injectPRPage(referencedIssuesInPR);
+            injectPRPage(containerElement, referencedIssuesInPR);
         } else if (PageDetect.isIssue()) {
             injectIssuePage();
         }
     }
 
-    function injectPRPage(referencedIssue: Set<number>) {
+    function injectPRPage(containerElement: HTMLDivElement, referencedIssues: Set<number>) {
+        if (referencedIssues.size <= 0) { return; }
+
+        const {ownerName, repoName} = PageDetect.getOwnerAndRepo();
+        const title = 'Issues referenced in this PR:';
+        const issues = Array.from(referencedIssues);
+        const docFrag = DOM.getTitleLinkList(title, issues, (linkElement: HTMLAnchorElement, issueNum: number) => {
+            linkElement.text = '#' + issueNum;
+            linkElement.href = GithubURLs.issueFromNumber(ownerName, repoName, issueNum);
+        });
+
+        containerElement.appendChild(docFrag);
     }
 
     function injectIssuePage() {
