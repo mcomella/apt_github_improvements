@@ -21,7 +21,33 @@ namespace GithubDOMIssue {
 
 namespace GithubDOMPR {
 
-    export function extractReferencedIssues() {
+    export function getCommitMsgElements() {
+        return document.querySelectorAll('.commit-message') as NodeListOf<HTMLDivElement> | null;
+    }
 
+    export function extractReferencedIssues(): Set<number> {
+        const titleIssues = extractIssuesFromTitle();
+        const commitIssues = extractIssuesFromCommits();
+
+        titleIssues.unionMutate(commitIssues);
+        return titleIssues;
+    }
+
+    function extractIssuesFromTitle(): Set<number> {
+        const titleElement = GithubDOMIssue.getTitleElement();
+        if (!titleElement) { return new Set(); }
+        return GithubIssue.getNumsFromStr(titleElement.innerText);
+    }
+
+    function extractIssuesFromCommits(): Set<number> {
+        const commitMsgElements = getCommitMsgElements();
+        if (!commitMsgElements) { return new Set(); }
+
+        let issueNums = new Set();
+        commitMsgElements.forEach(e => {
+            const issueNumsInCommit = GithubIssue.getNumsFromStr(e.innerText);
+            issueNums.unionMutate(issueNumsInCommit);
+        });
+        return issueNums;
     }
 }

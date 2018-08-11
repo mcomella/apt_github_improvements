@@ -7,18 +7,15 @@
  */
 namespace FeatureLinkIssuesToPRs {
 
-    export function inject(containerElement: HTMLDivElement) {
+    export function inject(containerElement: HTMLDivElement, referencedIssuesInPR: Set<number>) {
         if (PageDetect.isPR()) {
-            injectPRPage();
+            injectPRPage(referencedIssuesInPR);
         } else if (PageDetect.isIssue()) {
             injectIssuePage();
         }
     }
 
-    function injectPRPage() {
-        GithubDOMPR.extractReferencedIssues();
-        // store in DB
-        // inject in dom
+    function injectPRPage(referencedIssue: Set<number>) {
     }
 
     function injectIssuePage() {

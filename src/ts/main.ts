@@ -15,13 +15,17 @@ namespace Main {
         removeAnyAddonContainers();
 
         const Page = PageDetect;
+        let referencedIssuesInPR = new Set();
         if (Page.isPR()) {
+            referencedIssuesInPR = GithubDOMPR.extractReferencedIssues();
+            // todo: store.
+
             FeatureLinkIssuesInPRTitles.inject()
         }
 
         if (Page.isIssue() || Page.isPR()) {
             const preDiscussionsContainer = createContainer();
-            FeatureLinkIssuesToPRs.inject(preDiscussionsContainer);
+            FeatureLinkIssuesToPRs.inject(preDiscussionsContainer, referencedIssuesInPR);
             await FeatureBugzillaHoistBugLinks.inject(preDiscussionsContainer);
             injectPreDiscussionsContainer(preDiscussionsContainer);
         }
