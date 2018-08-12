@@ -113,11 +113,27 @@ class GithubStore {
         return this.storage.set(toStore);
     }
 
-    protected getKeyPRLastUpdated(prNum: number): string {
+    async getRepoOpenPRLastFetchMillis(): Promise<Date | undefined> {
+        const key = this.getKeyRepoOpenPRLastFetchMillis();
+        return (await this.storage.get(key))[key];
+    }
+
+    async setRepoOpenPRLastFetchMillis(now: Date): Promise<void> {
+        const key = this.getKeyRepoOpenPRLastFetchMillis();
+        const toStore = {} as StrToAny;
+        toStore[key] = now;
+        return this.storage.set(toStore);
+    }
+
+    protected getKeyRepoOpenPRLastFetchMillis(): string {
+        return `${GithubStore.PREFIX_KEY}-openPRLastFetch-${this.ownerRepo}`;
+    }
+
+    private getKeyPRLastUpdated(prNum: number): string {
         return `${GithubStore.PREFIX_KEY}-prLastUpdate-${this.ownerRepo}/${prNum}`;
     }
 
-    protected getKeyIssueToPR(issueNum: number): string {
+    private getKeyIssueToPR(issueNum: number): string {
         return `${GithubStore.PREFIX_KEY}-issue-${this.ownerRepo}/${issueNum}`;
     }
 }

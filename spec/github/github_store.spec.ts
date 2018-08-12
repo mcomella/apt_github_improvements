@@ -19,6 +19,7 @@ describe('A GithubStore', () => {
 
     const ORG = 'moz';
     const REPO = 'fire';
+    const ORG_REPO = `${ORG}/${REPO}`;
 
     const Store = MockGithubStore;
 
@@ -186,6 +187,27 @@ describe('A GithubStore', () => {
         });
     });
 
+    it('sets the open pr last fetch millis to the given value', async () => {
+        const now = new Date();
+        await testStore.setRepoOpenPRLastFetchMillis(now);
+        const key = getKeyRepoOpenPRLastFetchMillis();
+        expect(backingData[key]).toBe(now);
+    });
+
+    it('given an open pr last fetch millis in the DB, gets it', async () => {
+        const expected = new Date();
+        const key = getKeyRepoOpenPRLastFetchMillis();
+        backingData[key] = expected;
+
+        const actual = await testStore.getRepoOpenPRLastFetchMillis();
+        expect(actual).toBe(expected);
+    });
+
+    it('given an empty DB, gets undefined for the open pr last fetch millis', async () => {
+        const actual = await testStore.getRepoOpenPRLastFetchMillis();
+        expect(actual).toBeUndefined();
+    });
+
     function getMockStorage() {
         const backingData = {} as StrToAny;
         const mockStore = {
@@ -219,11 +241,15 @@ describe('A GithubStore', () => {
         };
     }
 
+    function getKeyRepoOpenPRLastFetchMillis(): string {
+        return `ghs-openPRLastFetch-${ORG_REPO}`;
+    }
+
     function getKeyIssueToPR(issueNum: number): string {
-        return `ghs-issue-${ORG}/${REPO}/${issueNum}`;
+        return `ghs-issue-${ORG_REPO}/${issueNum}`;
     }
 
     function getKeyPRLastUpdate(prNum: number): string {
-        return `ghs-prLastUpdate-${ORG}/${REPO}/${prNum}`;
+        return `ghs-prLastUpdate-${ORG_REPO}/${prNum}`;
     }
 });
