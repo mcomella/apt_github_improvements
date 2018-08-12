@@ -6,6 +6,10 @@ function onPageLoad() { // Called by github_navigation.js.
     Main.onPageLoad();
 }
 
+interface PageState {
+    referencedIssuesInPR: Set<number>;
+}
+
 namespace Main {
     const ID_CONTAINER = 'webext-apt_github_improvements_container';
 
@@ -14,25 +18,42 @@ namespace Main {
         // manually remove added nodes ourselves.
         removeAnyAddonContainers();
 
-        const Page = PageDetect;
-        let referencedIssuesInPR = new Set<number>();
-        if (Page.isPR()) {
-            referencedIssuesInPR = GithubDOMPR.extractReferencedIssues();
-            await storeReferencedIssuesInPR(referencedIssuesInPR); // synchronous so later calls can use DB.
+        const pageState = await synchronizeState();
+        injectFeatures(pageState);
+    }
 
-            FeatureLinkIssuesInPRTitles.inject()
-        }
+    async function injectFeatures(pageState: PageState) {
+        if (PageDetect.isPR()) {
+            FeatureLinkIssuesInPRTitles.inject();
 
-        if (Page.isIssue() || Page.isPR()) {
-            const preDiscussionsContainer = createContainer();
-            FeatureLinkIssuesToPRs.inject(preDiscussionsContainer, referencedIssuesInPR);
-            await FeatureBugzillaHoistBugLinks.inject(preDiscussionsContainer);
-            injectPreDiscussionsContainer(preDiscussionsContainer);
-        }
-
-        if (Page.isMilestone()) {
+        } else if (PageDetect.isMilestone()) {
             FeatureStoryPoints.inject();
         }
+
+        if (PageDetect.isIssue() || PageDetect.isPR()) {
+            const preDiscussionsContainer = createContainer();
+
+            FeatureLinkIssuesToPRs.inject(preDiscussionsContainer, pageState.referencedIssuesInPR);
+            await FeatureBugzillaHoistBugLinks.inject(preDiscussionsContainer);
+
+            injectPreDiscussionsContainer(preDiscussionsContainer);
+        }
+    }
+
+    /**
+     * Synchronizes add-on state with GitHub's internal state, e.g.
+     * by scraping pages or making requests to the GitHub API.
+     */
+    async function synchronizeState(): Promise<PageState> {
+        let referencedIssuesInPR = new Set<number>();
+        if (PageDetect.isPR()) {
+            referencedIssuesInPR = GithubDOMPR.extractReferencedIssues();
+            await storeReferencedIssuesInPR(referencedIssuesInPR);
+        }
+
+        return {
+            referencedIssuesInPR: referencedIssuesInPR,
+        };
     }
 
     async function storeReferencedIssuesInPR(referencedIssuesInPR: Set<number>): Promise<void> {
