@@ -36,7 +36,7 @@ namespace GithubDOMPR {
     function extractIssuesFromTitle(): Set<number> {
         const titleElement = GithubDOMIssue.getTitleElement();
         if (!titleElement) { return new Set(); }
-        return GithubIssue.getNumsFromStr(titleElement.innerText);
+        return GithubParser.getNumsFromStr(titleElement.innerText);
     }
 
     function extractIssuesFromCommits(): Set<number> {
@@ -45,7 +45,7 @@ namespace GithubDOMPR {
 
         let issueNums = new Set();
         commitMsgElements.forEach(e => {
-            const issueNumsInCommit = GithubIssue.getNumsFromStr(e.innerText);
+            const issueNumsInCommit = GithubParser.getNumsFromStr(e.innerText);
             issueNums.unionMutate(issueNumsInCommit);
         });
         return issueNums;

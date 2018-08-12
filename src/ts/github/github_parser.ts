@@ -2,8 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-/** Helpers for manipulating GithubIssues. */
-namespace GithubIssue {
+/** Helpers for parsing Github content. */
+namespace GithubParser {
 
     export const REGEX_NUMBER = /#(\d+)/;
     const REGEX_NUMBER_GLOBAL = new RegExp(REGEX_NUMBER, 'g');

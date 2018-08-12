@@ -2,21 +2,21 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-describe('The GitHubIssue namespace', () => {
+describe('The GitHubParser', () => {
 
     describe('has an issue number regex that', () => {
         it('can identify if an issue number is present or not', () => {
-            const regexResult = GithubIssue.REGEX_NUMBER.test('Issue #10: Open issue');
+            const regexResult = GithubParser.REGEX_NUMBER.test('Issue #10: Open issue');
             expect(regexResult).toBeTruthy();
         });
 
         it('can find the index of an issue number (starting at #)', () => {
-            const regexResult = 'Issue #10: Open issue'.search(GithubIssue.REGEX_NUMBER);
+            const regexResult = 'Issue #10: Open issue'.search(GithubParser.REGEX_NUMBER);
             expect(regexResult).toBe(6);
         });
 
         it('can capture', () => {
-            const regexResult = 'Issue #10: Open issue'.match(GithubIssue.REGEX_NUMBER);
+            const regexResult = 'Issue #10: Open issue'.match(GithubParser.REGEX_NUMBER);
             expect(regexResult).toBeTruthy();
             expect(regexResult!.length).toBeGreaterThanOrEqual(2);
             expect(regexResult![0]).toBe('#10');
@@ -24,7 +24,7 @@ describe('The GitHubIssue namespace', () => {
         });
 
         it('will not match a number without a #', () => {
-            const regexResult = GithubIssue.REGEX_NUMBER.test('Issue 10: Open issue');
+            const regexResult = GithubParser.REGEX_NUMBER.test('Issue 10: Open issue');
             expect(regexResult).toBeFalsy()
         });
     });
@@ -39,32 +39,32 @@ describe('The GitHubIssue namespace', () => {
                 'This is #e3 right?'
             ];
             titles.forEach(title => {
-                const actualValue = GithubIssue.getNumsFromStr(title);
+                const actualValue = GithubParser.getNumsFromStr(title);
                 expect(actualValue.size).toEqual(0);
             })
-            expect(GithubIssue.getNumsFromStr(''))
+            expect(GithubParser.getNumsFromStr(''))
         });
 
         it('successfully with "Issue" notation', () => {
-            const actualValue = GithubIssue.getNumsFromStr('Issue #345: Add readme.');
+            const actualValue = GithubParser.getNumsFromStr('Issue #345: Add readme.');
             expect(actualValue.size).toEqual(1);
             expect(actualValue).toContain(345)
         });
 
         it('successfully with "Closes" notation', () => {
-            const actualValue = GithubIssue.getNumsFromStr('Closes #345: Add readme.');
+            const actualValue = GithubParser.getNumsFromStr('Closes #345: Add readme.');
             expect(actualValue.size).toEqual(1);
         ;   expect(actualValue).toContain(345)
         });
 
         it('successfully with trailing notation', () => {
-            const actualValue = GithubIssue.getNumsFromStr('Add readme. (#345)');
+            const actualValue = GithubParser.getNumsFromStr('Add readme. (#345)');
             expect(actualValue.size).toEqual(1);
             expect(actualValue).toContain(345);
         });
 
         it('successfully for multiple issue numbers', () => {
-            const actualValue = GithubIssue.getNumsFromStr('Closes #345, Closes #567: Add readme.');
+            const actualValue = GithubParser.getNumsFromStr('Closes #345, Closes #567: Add readme.');
             expect(actualValue.size).toEqual(2);
             expect(actualValue).toContain(345);
             expect(actualValue).toContain(567);
