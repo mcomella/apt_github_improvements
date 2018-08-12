@@ -187,6 +187,20 @@ describe('A GithubStore', () => {
         });
     });
 
+    it('given a PR last update millis in the DB, will get it', async () => {
+        const now = new Date();
+        const key = getKeyPRLastUpdate(10);
+        backingData[key] = now;
+
+        const actual = await testStore.getPRLastUpdatedMillis(10);
+        expect(actual).toBe(now);
+    });
+
+    it('given an empty DB, gets undefined for a PR\'s last update time', async () => {
+        const actual = await testStore.getPRLastUpdatedMillis(10);
+        expect(actual).toBeUndefined();
+    });
+
     it('sets the open pr last fetch millis to the given value', async () => {
         const now = new Date();
         await testStore.setRepoOpenPRLastFetchMillis(now);

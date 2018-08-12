@@ -20,14 +20,10 @@ class GithubStore {
 
     private static readonly RE_KEY_ISSUE_TO_PR = /([0-9]+)$/
 
-    private readonly owner: string;
-    private readonly repo: string;
     private readonly ownerRepo: string;
     private readonly storage: StorageArea;
 
     protected constructor(owner: string, repo: string, _storage?: StorageArea) {
-        this.owner = owner;
-        this.repo = repo;
         this.ownerRepo = `${owner}/${repo}`;
         if (!_storage) {
             this.storage = browser.storage.local;
@@ -111,6 +107,11 @@ class GithubStore {
         }
 
         return this.storage.set(toStore);
+    }
+
+    async getPRLastUpdatedMillis(prNum: number): Promise<Date | undefined> {
+        const key = this.getKeyPRLastUpdated(prNum);
+        return (await this.storage.get(key))[key];
     }
 
     async getRepoOpenPRLastFetchMillis(): Promise<Date | undefined> {
