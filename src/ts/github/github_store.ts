@@ -7,7 +7,7 @@ type StorageArea = browser.storage.StorageArea;
 /** Persisted data from GitHub. */
 class GithubStore {
 
-    static async getStore(owner: string, repo: string): Promise<GithubStore> {
+    static async get(owner: string, repo: string): Promise<GithubStore> {
         const store = new GithubStore(owner, repo);
         await store.maybeUpgrade();
         return store;

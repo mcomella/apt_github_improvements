@@ -69,7 +69,7 @@ namespace Main {
         });
 
         const {ownerName, repoName} = PageDetect.getOwnerAndRepo();
-        const store = await GithubStore.getStore(ownerName, repoName);
+        const store = await GithubStore.get(ownerName, repoName);
         return store.mergeIssueToPRs(issuesToPRs);
     }
 

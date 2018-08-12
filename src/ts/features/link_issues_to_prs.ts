@@ -37,7 +37,7 @@ namespace FeatureLinkIssuesToPRs {
         }
 
         const {ownerName, repoName} = PageDetect.getOwnerAndRepo();
-        const store = await GithubStore.getStore(ownerName, repoName);
+        const store = await GithubStore.get(ownerName, repoName);
         const prsForIssue = await store.getIssueToPRs(pageIssueNum);
         if (prsForIssue.size <= 0) { return; }
 
