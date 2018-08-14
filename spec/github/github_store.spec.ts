@@ -2,28 +2,21 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-class MockGithubStore extends GithubStore {
-    static readonly DB_VERSION = GithubStore.DB_VERSION;
-    static readonly KEY_DB_VERSION = GithubStore.KEY_DB_VERSION;
-
-    constructor(owner: string, repo: string, mockStorage: StorageArea) {
-        super(owner, repo, mockStorage);
-    }
-
-    async maybeUpgrade(newVersion?: number) {
-        super.maybeUpgrade(newVersion);
-    }
-}
-
 describe('A GithubStore', () => {
+
+    class LocalMockGithubStore extends MockGithubStore {
+        async maybeUpgrade(newVersion?: number) {
+            super.maybeUpgrade(newVersion);
+        }
+    }
 
     const ORG = 'moz';
     const REPO = 'fire';
     const ORG_REPO = `${ORG}/${REPO}`;
 
-    const Store = MockGithubStore;
+    const Store = LocalMockGithubStore;
 
-    let testStore: MockGithubStore;
+    let testStore: LocalMockGithubStore;
     let backingData: StrToAny;
     let mockStorage: StorageArea;
 
@@ -32,7 +25,7 @@ describe('A GithubStore', () => {
         backingData = storageContainer.backingData;
         mockStorage = storageContainer.mockStore;
 
-        testStore = new MockGithubStore(ORG, REPO, mockStorage);
+        testStore = new LocalMockGithubStore(ORG, REPO, mockStorage);
     });
 
     it('inits the DB with the current version when empty', async () => {
