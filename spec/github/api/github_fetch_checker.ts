@@ -101,7 +101,7 @@ describe('The GithubFetchChecker', () => {
             const now = new Date();
             const later = getLater(now);
 
-            const input = [] as PRForFetch[];
+            const input = [] as GithubFetchChecker.PR[];
             [1, 2, 3, 4].forEach(n => input.push({number: n}));
 
             spyOn(mockStore, 'getPRLastUpdatedMillis').and.returnValues(

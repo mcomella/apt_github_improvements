@@ -2,10 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-interface PRForFetch {
-    number: number;
-}
-
 /** Checks if we're ready to fetch from the endpoint.  */
 class GithubFetchChecker {
 
@@ -36,8 +32,14 @@ class GithubFetchChecker {
         return nextUpdateMillis <= now.getTime();
     }
 
-    async filterPRsFetchReady<T extends PRForFetch>(prs: T[], now: Date): Promise<T[]> {
+    async filterPRsFetchReady<T extends GithubFetchChecker.PR>(prs: T[], now: Date): Promise<T[]> {
         const isPRReadyToSyncColl = await Promise.all(prs.map(pr => this.isPRFetchReady(pr.number, now)));
         return prs.filter((_, i) => { return isPRReadyToSyncColl[i]; });
+    }
+}
+
+namespace GithubFetchChecker {
+    export interface PR {
+        number: number,
     }
 }
