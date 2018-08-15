@@ -21,6 +21,34 @@ namespace GithubEndpoint {
         return response.json();
     }
 
+    export async function fetchPRsCommits(prs: PR[]): Promise<PRWithCommits[]> {
+        const prCommits = await Promise.all(prs.map(fetchPRCommits));
+
+        const prsWithCommits = [] as PRWithCommits[];
+        prCommits.forEach((commits, i) => {
+            if (!commits) { return; }
+            prsWithCommits.push(Object.assign({commits: commits}, prs[i]));
+        });
+        return prsWithCommits;
+    }
+
+    async function fetchPRCommits(pr: PR): Promise<Commit[] | null> {
+        const request = new Request(pr.commits_url, {
+            method: 'GET',
+            headers: await getHeaders(),
+        });
+
+        try {
+            const response = await fetch(request);
+            if (response.status >= 300) {
+                return null;
+            }
+            return response.json();
+        } catch (e) {
+            return null;
+        }
+    }
+
     async function getHeaders() {
         const headers = {
             'Accept': 'application/vnd.github.v3+json',
@@ -37,5 +65,16 @@ namespace GithubEndpoint {
     export interface PR {
         number: number,
         title: string,
+        commits_url: string,
+    }
+
+    export interface Commit {
+        commit: {
+            message: string,
+        },
+    }
+
+    export interface PRWithCommits extends PR {
+        commits: Commit[],
     }
 }
