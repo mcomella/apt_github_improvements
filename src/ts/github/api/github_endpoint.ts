@@ -32,12 +32,33 @@ namespace GithubEndpoint {
         return prsWithCommits;
     }
 
+    // async function fetchPRCommits(pr: PR): Promise<Commit[] | null> {
+    //     const request = new Request(pr.commits_url, {
+    //         method: 'GET',
+    //         headers: await getHeaders(),
+    //     });
+
+
+        // try {
+        //     const response = await fetch(request);
+        //     if (response.status >= 300) {
+        //         return null;
+        //     }
+        //     return response.json();
+        // } catch (e) {
+        //     return null;
+        // }
+    // }
+
     async function fetchPRCommits(pr: PR): Promise<Commit[] | null> {
         const request = new Request(pr.commits_url, {
             method: 'GET',
             headers: await getHeaders(),
         });
+            return unwrapPrRequest(request)
+    }
 
+     async function unwrapPrRequest(requests: Request) {
         try {
             const response = await fetch(request);
             if (response.status >= 300) {
@@ -48,6 +69,14 @@ namespace GithubEndpoint {
             return null;
         }
     }
+
+    function test() {
+        const testReq = new Promise((resolve, reject) => {
+            throw Exception()
+        })
+        assert { unwrapPrRequest(testReq) == null }
+    }
+
 
     async function getHeaders() {
         const headers = {
