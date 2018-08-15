@@ -70,4 +70,15 @@ describe('The GitHubParser', () => {
             expect(actualValue).toContain(567);
         })
     });
+
+    describe('will extract issue numbers from a commit message', () => {
+        // relies on getNumsFromStr so we don't have to test as strictly.
+        it('but will only get numbers for the commit summary before the newline', () => {
+            const input = 'Closes #345, Issue #123: Do a thing.\n\nThis is unrelated to #456, however';
+            const actualValue = GithubParser.getNumsFromCommitMessage(input);
+            expect(actualValue.size).toBe(2);
+            expect(actualValue).toContain(345);
+            expect(actualValue).toContain(123);
+        });
+    });
 });

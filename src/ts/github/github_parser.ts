@@ -16,4 +16,9 @@ namespace GithubParser {
         }
         return issueNumbers;
     }
+
+    export function getNumsFromCommitMessage(msg: string): Set<number> {
+        const summary = msg.split('\n')[0];
+        return getNumsFromStr(summary);
+    }
 }
