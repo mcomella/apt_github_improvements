@@ -45,10 +45,15 @@ namespace Main {
      * by scraping pages or making requests to the GitHub API.
      */
     async function synchronizeState(): Promise<PageState> {
+        const {ownerName, repoName} = PageDetect.getOwnerAndRepo();
         let referencedIssuesInPR = new Set<number>();
         if (PageDetect.isPR()) {
             referencedIssuesInPR = GithubDOMPR.extractReferencedIssues();
             await storeReferencedIssuesInPR(referencedIssuesInPR);
+
+        } else if (PageDetect.isIssue()) {
+            const synchronizer = await GithubSynchronizer.get(ownerName, repoName);
+            await synchronizer.maybeSynchronizeOpenPRs();
         }
 
         return {
