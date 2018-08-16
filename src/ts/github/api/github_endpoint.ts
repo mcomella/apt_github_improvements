@@ -21,18 +21,11 @@ namespace GithubEndpoint {
         return response.json();
     }
 
-    export async function fetchPRsCommits(prs: PR[]): Promise<PRWithCommits[]> {
-        const prCommits = await Promise.all(prs.map(fetchPRCommits));
-
-        const prsWithCommits = [] as PRWithCommits[];
-        prCommits.forEach((commits, i) => {
-            if (!commits) { return; }
-            prsWithCommits.push(Object.assign({commits: commits}, prs[i]));
-        });
-        return prsWithCommits;
+    export async function fetchPRCommitsMultiple(prs: PR[]): Promise<Array<Commit[] | null>> {
+        return await Promise.all(prs.map(fetchPRCommits));
     }
 
-    async function fetchPRCommits(pr: PR): Promise<Commit[] | null> {
+    export async function fetchPRCommits(pr: PR): Promise<Commit[] | null> {
         const request = new Request(pr.commits_url, {
             method: 'GET',
             headers: await getHeaders(),
@@ -72,9 +65,5 @@ namespace GithubEndpoint {
         commit: {
             message: string,
         },
-    }
-
-    export interface PRWithCommits extends PR {
-        commits: Commit[],
     }
 }

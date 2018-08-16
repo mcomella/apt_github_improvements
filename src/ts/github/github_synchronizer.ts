@@ -2,6 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
+type ZippedPR = {0: GithubEndpoint.PR, 1: GithubEndpoint.Commit[]}
+
 /**
  * Synchronizes data from GitHub with the add-on, e.g. scraping
  * pages or accessing the GitHub API.
@@ -43,15 +45,16 @@ class GithubSynchronizer {
 
         const fetchReadyPRs = await this.fetchChecker.filterPRsFetchReady(openPRs, now);
 
-        // If there are fetch errors, individual PRs may be dropped.
-        const fetchedPRs = await GithubEndpoint.fetchPRsCommits(fetchReadyPRs);
-        const newIssuesToPRs = this.transformFetchedPRsToIssuesToPRs(fetchedPRs);
-        this.store.mergeIssueToPRs(newIssuesToPRs); // Sets last merge on PRs.
+        const fetchedCommits = await GithubEndpoint.fetchPRCommitsMultiple(fetchReadyPRs);
+        const prsWithCommits = flatZip(fetchReadyPRs, fetchedCommits);
+        const newIssuesToPRs = this.transformFetchedPRsToIssuesToPRs(prsWithCommits);
+        this.store.mergeIssueToPRs(newIssuesToPRs); // Sets last update millis on PRs.
 
         await this.store.setRepoOpenPRLastFetchMillis(now);
     }
 
-    private transformFetchedPRsToIssuesToPRs(prs: GithubEndpoint.PRWithCommits[]): NumToNumSet {
+    // todo: test me!
+    private transformFetchedPRsToIssuesToPRs(zippedPRs: ZippedPR[]): NumToNumSet {
         const issuesToPRs = {} as NumToNumSet;
         return issuesToPRs
     }
