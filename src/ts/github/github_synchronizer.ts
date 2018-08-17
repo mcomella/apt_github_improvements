@@ -47,15 +47,9 @@ class GithubSynchronizer {
 
         const fetchedCommits = await GithubEndpoint.fetchPRCommitsMultiple(fetchReadyPRs);
         const prsWithCommits = flatZip(fetchReadyPRs, fetchedCommits);
-        const newIssuesToPRs = this.transformFetchedPRsToIssuesToPRs(prsWithCommits);
+        const newIssuesToPRs = GithubDataTransformer.fetchedPRsToIssuesToPRs(prsWithCommits);
         this.store.mergeIssueToPRs(newIssuesToPRs); // Sets last update millis on PRs.
 
         await this.store.setRepoOpenPRLastFetchMillis(now);
-    }
-
-    // todo: test me!
-    private transformFetchedPRsToIssuesToPRs(zippedPRs: ZippedPR[]): NumToNumSet {
-        const issuesToPRs = {} as NumToNumSet;
-        return issuesToPRs
     }
 }
