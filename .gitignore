@@ -1,5 +1,7 @@
 # Build
 dist/
+.nyc_output/
+coverage/
 
 # Editor
 .vscode

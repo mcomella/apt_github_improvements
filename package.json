@@ -4,14 +4,11 @@
   "directories": {
     "doc": "docs"
   },
-
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-
-    "test": "tsc -p spec && jasmine"
+    "test": "tsc -p spec && nyc --reporter=html jasmine"
   },
-
   "author": "Michael Comella",
   "license": "MPL-2.0",
   "homepage": "https://github.com/mcomella/apt_github_improvements#readme",
@@ -22,9 +19,9 @@
   "bugs": {
     "url": "https://github.com/mcomella/apt_github_improvements/issues"
   },
-
   "devDependencies": {
     "jasmine": "^3.2.0",
+    "nyc": "^12.0.2",
     "typescript": "^3.0.1"
   }
 }
