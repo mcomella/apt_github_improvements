@@ -7,7 +7,7 @@
 
     "content_scripts": [{
         "matches": ["*://*.github.com/*"],
-        "js": ["src/dist/content_script.js"]
+        "js": ["dist/src/content_script.js"]
     }],
 
     "permissions": [

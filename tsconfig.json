@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "outFile": "./src/dist/content_script.js",
+        "outFile": "./dist/src/content_script.js",
         "sourceMap": true,
         "removeComments": true,
         "allowJs": true, // for github_navigation
@@ -13,11 +13,7 @@
     },
 
     "include": [
-        "./src",
-        "./src/thirdparty/github_navigation/github_navigation.js",
-    ],
-
-    "exclude": [
-        "./src/dist",
+        "./src/**/*ts",
+        "./src/", // github_navigation must be last.
     ],
 }

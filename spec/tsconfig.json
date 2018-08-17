@@ -1,7 +1,7 @@
 {
     "extends": "../tsconfig.json",
     "compilerOptions": {
-        "outFile": "./dist/tests.spec.js",
+        "outFile": "../dist/spec/tests.spec.js",
     },
 
     "include": [
@@ -11,8 +11,6 @@
     ],
 
     "exclude": [
-        "./dist",
-        "../src/dist",
         "../src/thirdparty/github_navigation/",
     ]
 }
