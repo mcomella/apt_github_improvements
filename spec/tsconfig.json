@@ -5,12 +5,14 @@
     },
 
     "include": [
-        "../src/ts", // Main source
+        "../src/", // Main source
         "./helpers", // Shared test code
         "./", // Test code
     ],
 
     "exclude": [
         "./dist",
+        "../src/dist",
+        "../src/thirdparty/github_navigation/",
     ]
 }
