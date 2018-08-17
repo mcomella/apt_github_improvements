@@ -13,7 +13,11 @@
     },
 
     "include": [
-        "./src/ts",
-        "./src/github_navigation.js",
+        "./src",
+        "./src/js/github_navigation.js",
+    ],
+
+    "exclude": [
+        "./src/dist",
     ],
 }
