@@ -25,22 +25,31 @@ This extension adds unique functionality for Mozilla/APT so there are no existin
 There are other solutions that add/change GitHub functionality but they generally address a single user problem that does not overlap in scope with APT GitHub Improvements.
 
 ## Development
-Install the typescript compiler, `tsc`, with `npm` and build with:
+Install global dependencies:
+- [nodejs] (8.11.4 LTS)
+- npm
+
+Install project dependencies:
 ```sh
-tsc
+npm install
 ```
 
-Add the `-w` argument for continuous compilation. To run your add-on in Firefox,
-you can load [a temporary add-on][temp addon].
+### Running
+To build, run either:
+```
+npm run build
+npm run watch # Rebuilds when files change
+```
+
+To run the compiled output in Firefox, you can load
+[a temporary add-on][temp addon].
 
 Development with Visual Studio Code is recommended, given its awareness of Typescript types.
 
-### Tests
-The tests can be found in the `./spec` directory.
-
-Install `jasmine` globally with `npm`. To build and run the tests:
+### Testing
+The tests can be found in the `./spec` directory. To run:
 ```sh
-tsc -p spec && jasmine
+npm test
 ```
 
 ### Publishing
@@ -63,3 +72,4 @@ file, You can obtain one at http://mozilla.org/MPL/2.0/.
 [rg]: https://github.com/sindresorhus/refined-github/
 [Feature Philosophy]: docs/feature_philosophy.md
 [rg deps]: https://gist.github.com/mcomella/d99838853cffb22347cc34a1b553d6ba
+[nodejs]: https://nodejs.org/en/

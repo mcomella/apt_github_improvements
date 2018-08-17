@@ -1,0 +1,30 @@
+{
+  "name": "apt_github_improvements",
+  "main": "src/main.ts",
+  "directories": {
+    "doc": "docs"
+  },
+
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+
+    "test": "tsc -p spec && jasmine"
+  },
+
+  "author": "Michael Comella",
+  "license": "MPL-2.0",
+  "homepage": "https://github.com/mcomella/apt_github_improvements#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mcomella/apt_github_improvements.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mcomella/apt_github_improvements/issues"
+  },
+
+  "devDependencies": {
+    "jasmine": "^3.2.0",
+    "typescript": "^3.0.1"
+  }
+}
