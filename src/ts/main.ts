@@ -6,6 +6,10 @@ function onPageLoad() { // Called by github_navigation.js.
     Main.onPageLoad();
 }
 
+interface PageState {
+    referencedIssuesInPR: Set<number>;
+}
+
 namespace Main {
     const ID_CONTAINER = 'webext-apt_github_improvements_container';
 
@@ -14,20 +18,64 @@ namespace Main {
         // manually remove added nodes ourselves.
         removeAnyAddonContainers();
 
-        const Page = PageDetect;
-        if (Page.isPR()) {
-            FeatureLinkIssuesInPRTitles.inject()
-        }
+        const pageState = await synchronizeState();
+        injectFeatures(pageState);
+    }
 
-        if (Page.isIssue() || Page.isPR()) {
-            const preDiscussionsContainer = createContainer();
-            await FeatureBugzillaHoistBugLinks.inject(preDiscussionsContainer);
-            injectPreDiscussionsContainer(preDiscussionsContainer);
-        }
+    async function injectFeatures(pageState: PageState) {
+        if (PageDetect.isPR()) {
+            FeatureLinkIssuesInPRTitles.inject();
 
-        if (Page.isMilestone()) {
+        } else if (PageDetect.isMilestone()) {
             FeatureStoryPoints.inject();
         }
+
+        if (PageDetect.isIssue() || PageDetect.isPR()) {
+            const preDiscussionsContainer = createContainer();
+
+            FeatureLinkIssuesToPRs.inject(preDiscussionsContainer, pageState.referencedIssuesInPR);
+            await FeatureBugzillaHoistBugLinks.inject(preDiscussionsContainer);
+
+            injectPreDiscussionsContainer(preDiscussionsContainer);
+        }
+    }
+
+    /**
+     * Synchronizes add-on state with GitHub's internal state, e.g.
+     * by scraping pages or making requests to the GitHub API.
+     */
+    async function synchronizeState(): Promise<PageState> {
+        const {ownerName, repoName} = PageDetect.getOwnerAndRepo();
+        let referencedIssuesInPR = new Set<number>();
+        if (PageDetect.isPR()) {
+            referencedIssuesInPR = GithubDOMPR.extractReferencedIssues();
+            await storeReferencedIssuesInPR(referencedIssuesInPR);
+
+        } else if (PageDetect.isIssue()) {
+            const synchronizer = await GithubSynchronizer.get(ownerName, repoName);
+            await synchronizer.maybeSynchronizeOpenPRs();
+        }
+
+        return {
+            referencedIssuesInPR: referencedIssuesInPR,
+        };
+    }
+
+    async function storeReferencedIssuesInPR(referencedIssuesInPR: Set<number>): Promise<void> {
+        const prNumber = GithubURLs.getPRNumberFromURL(window.location);
+        if (!prNumber) {
+            Log.e('Unable to retrieve PR number from URL');
+            return;
+        }
+
+        const issuesToPRs = {} as NumToNumSet;
+        referencedIssuesInPR.forEach(issueNum => {
+            issuesToPRs[issueNum] = new Set([prNumber]);
+        });
+
+        const {ownerName, repoName} = PageDetect.getOwnerAndRepo();
+        const store = await GithubStore.get(ownerName, repoName);
+        return store.mergeIssueToPRs(issuesToPRs);
     }
 
     function removeAnyAddonContainers() {

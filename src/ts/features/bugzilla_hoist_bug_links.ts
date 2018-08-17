@@ -27,15 +27,15 @@ namespace FeatureBugzillaHoistBugLinks {
 
     function extractBugzillaLinksFromComments(): HTMLAnchorElement[] {
         const commentLinks = document.querySelectorAll(
-                `${GithubPageIssue.SELECTOR_COMMENT_BODY_VISIBLE} a`) as NodeListOf<HTMLAnchorElement>;
+                `${GithubDOMIssue.SELECTOR_COMMENT_BODY_VISIBLE} a`) as NodeListOf<HTMLAnchorElement>;
 
         return Array.from(commentLinks).filter(link => {
             return BugzillaURLs.is(link.href);
         });
     }
 
-    function getBugNumberToLink(bzLinks: HTMLAnchorElement[]): NumberToStr {
-        const bugNumToLink: NumberToStr = {};
+    function getBugNumberToLink(bzLinks: HTMLAnchorElement[]): NumToStr {
+        const bugNumToLink: NumToStr = {};
         bzLinks.forEach(aElement => {
             const bugNumber = BugzillaURLs.getBugNumber(aElement.href);
             if (bugNumber) {
@@ -47,13 +47,13 @@ namespace FeatureBugzillaHoistBugLinks {
         return bugNumToLink;
     }
 
-    async function getBugSummaries(bugNumToLink: NumberToStr): Promise<BugLink[]> {
+    async function getBugSummaries(bugNumToLink: NumToStr): Promise<BugLink[]> {
         const bugNumbersToFetch = Object.keys(bugNumToLink).map(e => parseInt(e));
         const bugSummaries = await BugzillaAPI.fetchSummariesForBugNumbers(bugNumbersToFetch);
 
         const bugLinks = bugSummaries.map(bug => { return {
             isPopulated: true,
-            href: bugNumToLink[bug.id],
+            href: bugNumToLink[bug.id]!,
             id: bug.id,
             status: bug.status,
             summary: bug.summary,
@@ -66,7 +66,7 @@ namespace FeatureBugzillaHoistBugLinks {
         missingBugNumbers.forEach(bugNum => {
             bugLinks.push({
                 isPopulated: false,
-                href: bugNumToLink[bugNum],
+                href: bugNumToLink[bugNum]!,
                 id: bugNum,
                 status: '',
                 summary: '',
@@ -78,25 +78,12 @@ namespace FeatureBugzillaHoistBugLinks {
     }
 
     function appendBugzillaDataToContainer(bzLinks: BugLink[], container: HTMLDivElement) {
-        const titleElement = document.createElement('p');
-        titleElement.textContent = "Bugzilla bugs referenced in this issue:"
-        titleElement.style.marginBottom = '0px'; // override GH style.
-        container.appendChild(titleElement);
-
-        const unorderedListElement = document.createElement('ul');
-        unorderedListElement.style.paddingLeft = '40px';
-        unorderedListElement.style.marginBottom = '14px';
-        container.appendChild(unorderedListElement);
-
-        bzLinks.forEach(link => {
-            const listItemElement = document.createElement('li');
-            unorderedListElement.appendChild(listItemElement);
-
-            const linkElement = document.createElement('a');
-            linkElement.href = link.href;
-            linkElement.text = getLinkText(link);
-            listItemElement.appendChild(linkElement);
+        const title = 'Bugzilla bugs referenced in this issue:';
+        const docFrag = DOM.getTitleLinkList(title, bzLinks, (linkElement: HTMLAnchorElement, bzLink: BugLink) => {
+            linkElement.href = bzLink.href;
+            linkElement.text = getLinkText(bzLink);
         });
+        container.appendChild(docFrag);
     }
 
     function getLinkText(link: BugLink): string {
@@ -106,7 +93,7 @@ namespace FeatureBugzillaHoistBugLinks {
 
         // Sample: Backspace deletes wrong chunk when deleting autocompleted URL  | FIXED VERIFIED | 1471868
         var linkText = `${link.summary} | ${link.status}`;
-        if (!StringUtils.isBlank(link.resolution)) {
+        if (!link.resolution.isBlank()) {
             linkText += ` ${link.resolution}`;
         }
         linkText += ` | ${link.id}`;

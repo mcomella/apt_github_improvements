@@ -12,6 +12,9 @@
 
     "permissions": [
         "*://bugzilla.mozilla.org/rest/*",
-        "webRequest"
+        "webRequest",
+        "*://api.github.com/*",
+        "webRequest",
+        "storage"
     ]
 }

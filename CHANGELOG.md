@@ -5,6 +5,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Feature to adds links between PRs and the issues they reference (#4)
+
+### Changed
+- Requires storage permission to cache data from GitHub.
+- Requires api.github.com webRequest permission to fetch data from GitHub.
 
 ## [0.3.0] - 2018-08-07
 ### Added

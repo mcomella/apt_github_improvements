@@ -6,7 +6,9 @@
 namespace FeatureLinkIssuesInPRTitles {
 
     export function inject() {
-        const titleElement = GithubPageIssue.getTitleElement();
+        const titleElement = GithubDOMIssue.getTitleElement();
+        if (!titleElement) { return; }
+
         const titleElementObserver = new MutationObserver(onTitleMutation);
         titleElementObserver.observe(titleElement, {childList: true});
 
@@ -14,19 +16,20 @@ namespace FeatureLinkIssuesInPRTitles {
     }
 
     function onTitleMutation(records: MutationRecord[], obs: MutationObserver) {
-        const titleElement = GithubPageIssue.getTitleElement();
+        const titleElement = GithubDOMIssue.getTitleElement();
+        if (!titleElement) { return; }
         linkIssuesInTitle(titleElement);
     }
 
     function linkIssuesInTitle(titleElement: HTMLSpanElement) {
         if (titleElement.querySelector('a') || // Someone, us?, has already added links.
-                !GithubIssue.REGEX_NUMBER.test(titleElement.innerText)) { // Nothing to change.
+                !GithubParser.REGEX_NUMBER.test(titleElement.innerText)) { // Nothing to change.
             return;
         }
 
         const linkedTitleFragment = document.createDocumentFragment();
         const {ownerName, repoName} = PageDetect.getOwnerAndRepo();
-        titleElement.innerText.split(GithubIssue.REGEX_NUMBER).forEach((splitText, index) => {
+        titleElement.innerText.split(GithubParser.REGEX_NUMBER).forEach((splitText, index) => {
             if (index % 2 === 0) {
                 linkedTitleFragment.appendChild(document.createTextNode(splitText));
             } else { // Matched issue numbers are odd indices.
