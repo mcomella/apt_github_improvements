@@ -29,8 +29,6 @@ class GithubSynchronizer {
         this.fetchChecker = fetchChecker;
     }
 
-    // todo: this function will be really complex and hard to test: how to break apart?
-    // todo: test githubEndpoint, especially error handling.
     async maybeSynchronizeOpenPRs(): Promise<void> {
         const now = new Date();
         if (!(await this.fetchChecker.isOpenPRsFetchReady(now))) { return; }
@@ -44,8 +42,8 @@ class GithubSynchronizer {
         }
 
         const fetchReadyPRs = await this.fetchChecker.filterPRsFetchReady(openPRs, now);
-
         const fetchedCommits = await GithubEndpoint.fetchPRCommitsMultiple(fetchReadyPRs);
+
         const prsWithCommits = flatZip(fetchReadyPRs, fetchedCommits);
         const newIssuesToPRs = GithubDataTransformer.fetchedPRsToIssuesToPRs(prsWithCommits);
         this.store.mergeIssueToPRs(newIssuesToPRs); // Sets last update millis on PRs.
