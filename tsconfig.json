@@ -14,7 +14,7 @@
 
     "include": [
         "./src",
-        "./src/js/github_navigation.js",
+        "./src/thirdparty/github_navigation/github_navigation.js",
     ],
 
     "exclude": [
