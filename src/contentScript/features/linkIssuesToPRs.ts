@@ -19,7 +19,7 @@ namespace FeatureLinkIssuesToPRs {
         if (referencedIssues.size <= 0) { return; }
 
         const {ownerName, repoName} = PageDetect.getOwnerAndRepo();
-        const title = 'Issues referenced in this PR:';
+        const title = 'Issues addressed in this PR:';
         const issues = Array.from(referencedIssues);
         const docFrag = DOM.getTitleLinkList(title, issues, (linkElement: HTMLAnchorElement, issueNum: number) => {
             linkElement.text = '#' + issueNum;
@@ -42,7 +42,7 @@ namespace FeatureLinkIssuesToPRs {
         if (prsForIssue.size <= 0) { return; }
 
         const prsArray = Array.from(prsForIssue);
-        const docFrag = DOM.getTitleLinkList('PRs which reference this issue:', prsArray, (linkElement: HTMLAnchorElement, prNum: number) => {
+        const docFrag = DOM.getTitleLinkList('PRs which address this issue:', prsArray, (linkElement: HTMLAnchorElement, prNum: number) => {
             linkElement.text = `#${prNum}`;
             linkElement.href = GithubURLs.prFromNumber(ownerName, repoName, prNum);
         });

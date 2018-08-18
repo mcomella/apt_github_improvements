@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 - Feature to adds links between PRs and the issues they reference (#4)
 - Options page
-- Ability to use GitHub access tokens against api.github.com
+- Ability to use GitHub access tokens for GitHub API calls
 
 ### Changed
 - Requires storage permission to cache data from GitHub.
