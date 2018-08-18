@@ -1,5 +1,6 @@
 # Build
 dist/
+node_modules/
 
 # Editor
 .vscode
