@@ -5,6 +5,11 @@
 
     "description": "Various improvements to GitHub for the Android Product Team (APT) at Mozilla",
 
+    "options_ui": {
+        "page": "dist/src/options.html",
+        "browser_style": true
+    },
+
     "content_scripts": [{
         "matches": ["*://*.github.com/*"],
         "js": ["dist/src/contentScript.js"]
