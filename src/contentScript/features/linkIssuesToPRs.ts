@@ -3,7 +3,7 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
 
 /**
- * todo
+ * Creates a link from PRs to the issues they reference and vice versa.
  */
 namespace FeatureLinkIssuesToPRs {
 
