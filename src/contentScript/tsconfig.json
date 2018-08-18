@@ -6,6 +6,7 @@
     },
 
     "include": [
+        "../options/optionsStore.ts",
         "./**/*ts",
         "./", // github_navigation must be last.
     ],
