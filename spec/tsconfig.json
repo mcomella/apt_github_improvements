@@ -2,6 +2,11 @@
     "extends": "../tsconfig.json",
     "compilerOptions": {
         "outFile": "../dist/spec/tests.spec.js",
+
+        "types": [
+            "firefox-webext-browser",
+            "jasmine",
+        ],
     },
 
     "include": [
