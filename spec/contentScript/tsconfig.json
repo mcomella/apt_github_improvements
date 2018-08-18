@@ -10,7 +10,10 @@
     },
 
     "include": [
-        "../../src/contentScript", // Main source
+        // Main source
+        "../../src/options/optionsStore.ts",
+        "../../src/contentScript",
+
         "./helpers", // Shared test code
         "./", // Test code
     ],
