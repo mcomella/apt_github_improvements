@@ -5,9 +5,9 @@
     "doc": "docs"
   },
   "scripts": {
-    "build": "tsc",
-    "watch": "tsc -w",
-    "test": "tsc -p spec && jasmine"
+    "build": "tsc -p src/contentScript && tsc -p src/options && ./scripts/build_supplement.sh",
+    "watch": "./scripts/watch.sh",
+    "test": "npm run build && tsc -p spec/contentScript && jasmine"
   },
   "author": "Michael Comella",
   "license": "MPL-2.0",

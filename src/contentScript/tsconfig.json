@@ -1,0 +1,13 @@
+{
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "outFile": "../../dist/src/contentScript.js",
+        "allowJs": true, // for github_navigation
+    },
+
+    "include": [
+        "../options/optionsStore.ts",
+        "./**/*ts",
+        "./", // github_navigation must be last.
+    ],
+}

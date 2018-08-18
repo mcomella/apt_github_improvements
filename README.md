@@ -55,7 +55,7 @@ npm test
 ### Publishing
 `dist/bundle.xpi` will be created after:
 ```sh
-./publish.sh
+./scripts/publish.sh
 ```
 
 ## License

@@ -1,0 +1,10 @@
+{
+    "extends": "../tsconfig.json",
+    "compilerOptions": {
+        "outFile": "../../dist/src/options.js",
+    },
+
+    "include": [
+        "./"
+    ],
+}

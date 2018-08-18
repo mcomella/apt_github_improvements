@@ -47,10 +47,10 @@ namespace GithubEndpoint {
             'Accept': 'application/vnd.github.v3+json',
         } as { [key: string]: string };
 
-        // const accessToken = await OptionsStore.getPersonalAccessToken();
-        // if (accessToken.length > 0) {
-        //     headers['Authorization'] = `token ${accessToken}`
-        // }
+        const accessToken = await OptionsStore.getPersonalAccessToken();
+        if (accessToken.length > 0) {
+            headers['Authorization'] = `token ${accessToken}`
+        }
 
         return headers;
     }
