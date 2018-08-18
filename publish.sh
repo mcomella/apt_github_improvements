@@ -14,8 +14,8 @@ fi
 rm -rf dist/
 mkdir dist/
 
-tsc && \
-    tsc -p spec && jasmine && \
+npm run build && \
+    npm test && \
     zip -r -FS dist/bundle.xpi \
         dist/src/ \
         LICENSE \

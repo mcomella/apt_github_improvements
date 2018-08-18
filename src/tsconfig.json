@@ -1,9 +1,7 @@
 {
     "compilerOptions": {
-        "outFile": "./dist/src/content_script.js",
         "sourceMap": true,
         "removeComments": true,
-        "allowJs": true, // for github_navigation
 
         "strictNullChecks": true,
         "noImplicitAny": true,
@@ -15,9 +13,4 @@
             "firefox-webext-browser"
         ],
     },
-
-    "include": [
-        "./src/**/*ts",
-        "./src/", // github_navigation must be last.
-    ],
 }

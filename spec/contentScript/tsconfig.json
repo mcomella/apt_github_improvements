@@ -1,7 +1,7 @@
 {
-    "extends": "../tsconfig.json",
+    "extends": "../../src/tsconfig.json",
     "compilerOptions": {
-        "outFile": "../dist/spec/tests.spec.js",
+        "outFile": "../../dist/spec/contentScript.spec.js",
 
         "types": [
             "firefox-webext-browser",
@@ -10,12 +10,12 @@
     },
 
     "include": [
-        "../src/", // Main source
+        "../../src/contentScript", // Main source
         "./helpers", // Shared test code
         "./", // Test code
     ],
 
     "exclude": [
-        "../src/thirdparty/github_navigation/",
+        "../../src/contentScript/thirdparty/github_navigation/",
     ]
 }
