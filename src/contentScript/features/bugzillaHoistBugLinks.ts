@@ -78,7 +78,7 @@ namespace FeatureBugzillaHoistBugLinks {
     }
 
     function appendBugzillaDataToContainer(bzLinks: BugLink[], container: HTMLDivElement) {
-        const title = 'Bugzilla bugs referenced in this issue:';
+        const title = 'Bugzilla bugs referenced in this issue';
         const docFrag = DOM.getTitleLinkList(title, bzLinks, (linkElement: HTMLAnchorElement, bzLink: BugLink) => {
             linkElement.href = bzLink.href;
             linkElement.text = getLinkText(bzLink);

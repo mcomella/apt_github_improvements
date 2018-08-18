@@ -19,12 +19,12 @@ namespace FeatureLinkIssuesToPRs {
         if (referencedIssues.size <= 0) { return; }
 
         const {ownerName, repoName} = PageDetect.getOwnerAndRepo();
-        const title = 'Issues addressed in this PR:';
+        const title = 'Issues addressed in this PR';
         const issues = Array.from(referencedIssues);
         const docFrag = DOM.getTitleLinkList(title, issues, (linkElement: HTMLAnchorElement, issueNum: number) => {
             linkElement.text = '#' + issueNum;
             linkElement.href = GithubURLs.issueFromNumber(ownerName, repoName, issueNum);
-        });
+        }, newLinkElement());
 
         containerElement.appendChild(docFrag);
     }
@@ -42,11 +42,18 @@ namespace FeatureLinkIssuesToPRs {
         if (prsForIssue.size <= 0) { return; }
 
         const prsArray = Array.from(prsForIssue);
-        const docFrag = DOM.getTitleLinkList('PRs which address this issue:', prsArray, (linkElement: HTMLAnchorElement, prNum: number) => {
+        const docFrag = DOM.getTitleLinkList('PRs which address this issue', prsArray, (linkElement: HTMLAnchorElement, prNum: number) => {
             linkElement.text = `#${prNum}`;
             linkElement.href = GithubURLs.prFromNumber(ownerName, repoName, prNum);
-        });
+        }, newLinkElement());
 
         containerElement.appendChild(docFrag);
+    }
+
+    function newLinkElement(): HTMLAnchorElement {
+        const linkElement = document.createElement('a');
+        linkElement.innerText = 'how?';
+        linkElement.href = 'https://github.com/mcomella/apt_github_improvements/blob/master/docs/features/link_issues_to_prs.md#criteria-for-prs-that-address-issues';
+        return linkElement;
     }
 }
