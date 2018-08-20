@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ## [Unreleased]
 ### Added
 - Feature to adds links between PRs and the issues they reference (#4)
-- Feature to indicate PRs that address issues in the issues list
+- Feature to indicate PRs that address issues in the issues list (#6)
 - Options page
 - Ability to use GitHub access tokens for GitHub API calls
 
