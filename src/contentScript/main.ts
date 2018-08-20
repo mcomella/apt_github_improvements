@@ -39,6 +39,10 @@ namespace Main {
 
             injectPreDiscussionsContainer(preDiscussionsContainer);
         }
+
+        if (PageDetect.isIssueList() || PageDetect.isMilestone()) {
+            FeatureLinkPRsInIssuesList.inject();
+        }
     }
 
     /**
@@ -52,7 +56,9 @@ namespace Main {
             referencedIssuesInPR = GithubDOMPR.extractReferencedIssues();
             await storeReferencedIssuesInPR(referencedIssuesInPR);
 
-        } else if (PageDetect.isIssue()) {
+        } else if (PageDetect.isIssue() ||
+                PageDetect.isIssueList() ||
+                PageDetect.isMilestone()) {
             const synchronizer = await GithubSynchronizer.get(ownerName, repoName);
             await synchronizer.maybeSynchronizeOpenPRs();
         }
