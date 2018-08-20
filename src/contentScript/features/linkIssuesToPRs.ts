@@ -30,7 +30,7 @@ namespace FeatureLinkIssuesToPRs {
     }
 
     async function injectIssuePage(containerElement: HTMLDivElement) {
-        const pageIssueNum = GithubURLs.getIssueNumberFromURL(window.location);
+        const pageIssueNum = GithubURLs.getIssueNumberFromLocation(window.location);
         if (!pageIssueNum) {
             Log.e('Unable to get issue number from URL');
             return;

@@ -21,8 +21,16 @@ namespace GithubURLs {
     }
 
     // sample: https://github.com/mcomella/apt_github_improvements/issues/4
-    export function getIssueNumberFromURL(url: Location): number | null {
-        const match = url.pathname.match(RE_ISSUE_URL);
+    export function getIssueNumberFromLocation(url: Location): number | null {
+        return getIssueNumberFromPathname(url.pathname);
+    }
+
+    export function getIssueNumberFromAnchor(anchorElement: HTMLAnchorElement): number | null {
+        return getIssueNumberFromPathname(anchorElement.pathname);
+    }
+
+    function getIssueNumberFromPathname(pathname: string): number | null {
+        const match = pathname.match(RE_ISSUE_URL);
         if (!match) { return null; }
         return parseInt(match[1]);
     }
