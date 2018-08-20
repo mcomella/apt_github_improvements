@@ -5,4 +5,4 @@ When looking at an open issues list or a milestone, it's sometimes helpful to kn
 
 In the issues list, the first is handled automatically by GitHub but the second is not: this feature adds these PRs to the issues list.
 
-![Example of Indicate PRs that address issues in issue list](im/indicate_prs_to_issues_list.png)
+![Example of Indicate PRs that address issues in issue list](im/indicate_prs_to_issues_list_example.png)
