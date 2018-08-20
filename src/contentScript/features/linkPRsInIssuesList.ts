@@ -18,9 +18,7 @@ namespace FeatureLinkPRsInIssuesList {
         GithubDOMIssueList.forEachIssue(async issueElement => {
             const issueNum = getIssueNumFromIssueElement(issueElement);
             const prs = await store.getIssueToPRs(issueNum);
-            if (prs.size >= 1) {
-                addPRLinkToIssue(ownerName, repoName, issueElement, prs);
-            }
+            addPRLinkToIssue(ownerName, repoName, issueElement, prs);
         });
     }
 
@@ -36,18 +34,27 @@ namespace FeatureLinkPRsInIssuesList {
 
     function addPRLinkToIssue(owner: string, repo: string, issueElement: HTMLLIElement,
             prNums: Set<number>) {
-        var prOne: number = 0;
-        for (let prNum of prNums) {
-            prOne = prNum;
+        if (prNums.size === 0) {
+            return;
         }
 
-        const prLinkElement = document.createElement('a');
-        prLinkElement.href = GithubURLs.prFromNumber(owner, repo, prOne);
-        prLinkElement.text = `PR #${prOne}`;
+        let prElement: HTMLElement;
+        if (prNums.size === 1) {
+            const prNum = prNums.values().next().value;
+            const prLinkElement = document.createElement('a');
+            prLinkElement.href = GithubURLs.prFromNumber(owner, repo, prNum);
+            prLinkElement.text = `PR #${prNum}`;
+            prElement = prLinkElement;
+        } else {
+            prElement = document.createElement('span');
+            prElement.textContent = 'PR > 1';
+        }
 
         const prLinkContainer = document.createElement('div');
         prLinkContainer.classList.add(CLASS_CONTAINER);
+        prLinkContainer.appendChild(prElement);
 
+        // This is the element on the right that displays the number of comments.
         const injectElement = issueElement.querySelector('.float-right .float-right') as HTMLDivElement;
         injectElement.appendChild(prLinkContainer);
     }
