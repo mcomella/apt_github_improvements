@@ -12,6 +12,7 @@ interface PageState {
 
 namespace Main {
     const ID_CONTAINER = 'webext-apt_github_improvements_container';
+    export const CLASS_CONTAINER_PREFIX = 'webext-apt_github_improvements';
 
     export async function onPageLoad() {
         // The DOM doesn't refresh on reload so we have to
@@ -19,6 +20,7 @@ namespace Main {
         removeAnyAddonContainers();
 
         const pageState = await synchronizeState();
+        await GithubPageReadyWaiter.await();
         injectFeatures(pageState);
     }
 
@@ -38,6 +40,10 @@ namespace Main {
 
             injectPreDiscussionsContainer(preDiscussionsContainer);
         }
+
+        if (PageDetect.isIssueList() || PageDetect.isMilestone()) {
+            FeatureIndicatePRsInIssuesList.inject();
+        }
     }
 
     /**
@@ -51,7 +57,9 @@ namespace Main {
             referencedIssuesInPR = GithubDOMPR.extractReferencedIssues();
             await storeReferencedIssuesInPR(referencedIssuesInPR);
 
-        } else if (PageDetect.isIssue()) {
+        } else if (PageDetect.isIssue() ||
+                PageDetect.isIssueList() ||
+                PageDetect.isMilestone()) {
             const synchronizer = await GithubSynchronizer.get(ownerName, repoName);
             await synchronizer.maybeSynchronizeOpenPRs();
         }

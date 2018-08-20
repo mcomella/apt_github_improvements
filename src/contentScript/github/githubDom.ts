@@ -51,3 +51,17 @@ namespace GithubDOMPR {
         return issueNums;
     }
 }
+
+namespace GithubDOMIssueList {
+
+    export const SELECTOR_EMPTY_CONTAINER = '.blankslate';
+
+    export const SELECTOR_ISSUE_ROW = '.js-issue-row';
+    export const SELECTOR_ISSUE_ROW_LINK = '.js-navigation-open';
+
+    export function forEachIssue(block: (issueElement: HTMLLIElement) => void) {
+        document.querySelectorAll(SELECTOR_ISSUE_ROW).forEach(e => {
+            block(e as HTMLLIElement);
+        });
+    }
+}
