@@ -19,6 +19,7 @@ namespace Main {
         removeAnyAddonContainers();
 
         const pageState = await synchronizeState();
+        await GithubPageReadyWaiter.await();
         injectFeatures(pageState);
     }
 

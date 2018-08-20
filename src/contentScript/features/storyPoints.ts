@@ -28,24 +28,6 @@ namespace FeatureStoryPoints {
     DEFAULT_DAYS_PER_SIZE[SIZE_L] = 5;
 
     export function inject() {
-        if (!isOpenIssuesTabSelected()) {
-            Log.l('"Open" tab is not selected. Ignoring.');
-            return;
-        }
-
-        if (isPageReady()) {
-            onPageReady();
-        } else {
-            var intervalID = window.setInterval(() => {
-                if (isPageReady()) {
-                    window.clearInterval(intervalID);
-                    onPageReady();
-                }
-            }, 1000);
-        }
-    }
-
-    function onPageReady() {
         let labelsDisplayedToUser = extractLabelsDisplayedToUser();
         let newNode = createResultNode(labelsDisplayedToUser);
         insertResultNode(newNode);
@@ -174,28 +156,4 @@ namespace FeatureStoryPoints {
     }
 
     function getInputElementID(label: string) { return TAG + '-' + label.replace(' ', '-'); }
-
-    function getOpenIssuesNode() {
-        let elements = Array.from(document.getElementsByClassName('table-list-header-toggle')) as [HTMLDivElement];
-        let openElements = elements.filter(e => e.innerText.includes('Open'));
-        return Array.from(openElements[0].childNodes).filter(node => {
-            let element = node as HTMLAnchorElement;
-            return element.innerText && element.innerText.includes('Open');
-        })[0] as HTMLAnchorElement;
-    }
-
-    function getActualOpenCount() {
-        // It'd be safer to use the API here...
-        return parseInt(getOpenIssuesNode().innerText.trim().split(' ')[0]);
-    }
-
-    function isOpenIssuesTabSelected() {
-        return getOpenIssuesNode().classList.contains('selected');
-    }
-
-    function isPageReady() {
-        // Issues are loaded asynchronously.
-        let displayedIssuesCount = document.getElementsByClassName('js-issue-row').length;
-        return getActualOpenCount() === displayedIssuesCount;
-    }
 }
