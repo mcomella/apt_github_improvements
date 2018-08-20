@@ -9,6 +9,7 @@ For an overview of how we decide which features make it into the project, see [F
 Features for general GitHub users:
 - [Link Issues to Pull Requests](docs/features/link_issues_to_prs.md)
 - [Link Issue Numbers in Pull Request titles](docs/features/link_issues_in_pr_titles.md)
+- [Indicate PRs that address issues in issues list](docs/features/indicate_prs_to_issues_list.md)
 
 Features for APT/Mozilla specifically (these will generally not appear when the user is not on APT/Mozilla repositories):
 - [Story Points](docs/features/story_points.md)
