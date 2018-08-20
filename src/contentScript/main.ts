@@ -42,7 +42,7 @@ namespace Main {
         }
 
         if (PageDetect.isIssueList() || PageDetect.isMilestone()) {
-            FeatureLinkPRsInIssuesList.inject();
+            FeatureIndicatePRsInIssuesList.inject();
         }
     }
 

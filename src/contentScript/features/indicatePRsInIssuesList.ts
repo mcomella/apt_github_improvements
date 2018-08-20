@@ -6,7 +6,7 @@
  * If a PR references an issue, creates a reference to that PR
  * on that issue in an issues list.
  */
-namespace FeatureLinkPRsInIssuesList {
+namespace FeatureIndicatePRsInIssuesList {
 
     const CLASS_CONTAINER = `${Main.CLASS_CONTAINER_PREFIX}_prLinks`;
 
