@@ -12,6 +12,7 @@ interface PageState {
 
 namespace Main {
     const ID_CONTAINER = 'webext-apt_github_improvements_container';
+    export const CLASS_CONTAINER_PREFIX = 'webext-apt_github_improvements';
 
     export async function onPageLoad() {
         // The DOM doesn't refresh on reload so we have to

@@ -8,7 +8,11 @@
  */
 namespace FeatureLinkPRsInIssuesList {
 
+    const CLASS_CONTAINER = `${Main.CLASS_CONTAINER_PREFIX}_prLinks`;
+
     export async function inject() {
+        removeAddedContainers();
+
         const {ownerName, repoName} = PageDetect.getOwnerAndRepo();
         const store = await GithubStore.get(ownerName, repoName);
         GithubDOMIssueList.forEachIssue(async issueElement => {
@@ -18,6 +22,10 @@ namespace FeatureLinkPRsInIssuesList {
                 addPRLinkToIssue(ownerName, repoName, issueElement, prs);
             }
         });
+    }
+
+    function removeAddedContainers() {
+        document.querySelectorAll(`.${CLASS_CONTAINER}`).forEach(e => e.remove());
     }
 
     function getIssueNumFromIssueElement(issueElement: HTMLElement): number {
@@ -38,7 +46,7 @@ namespace FeatureLinkPRsInIssuesList {
         prLinkElement.text = `PR #${prOne}`;
 
         const prLinkContainer = document.createElement('div');
-        prLinkContainer.appendChild(prLinkElement);
+        prLinkContainer.classList.add(CLASS_CONTAINER);
 
         const injectElement = issueElement.querySelector('.float-right .float-right') as HTMLDivElement;
         injectElement.appendChild(prLinkContainer);
