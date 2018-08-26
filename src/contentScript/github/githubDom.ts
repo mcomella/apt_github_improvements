@@ -56,6 +56,8 @@ namespace GithubDOMIssueList {
 
     export const SELECTOR_EMPTY_CONTAINER = '.blankslate';
 
+    export const SELECTOR_ISSUES_LISTING = '.issues-listing';
+
     export const SELECTOR_ISSUE_ROW = '.js-issue-row';
     export const SELECTOR_ISSUE_ROW_LINK = '.js-navigation-open';
 

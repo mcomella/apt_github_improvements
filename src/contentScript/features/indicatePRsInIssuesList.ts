@@ -15,15 +15,40 @@ namespace FeatureIndicatePRsInIssuesList {
 
         const {ownerName, repoName} = PageDetect.getOwnerAndRepo();
         const store = await GithubStore.get(ownerName, repoName);
-        GithubDOMIssueList.forEachIssue(async issueElement => {
-            const issueNum = getIssueNumFromIssueElement(issueElement);
-            const prs = await store.getIssueToPRs(issueNum);
-            addPRLinkToIssue(ownerName, repoName, issueElement, prs);
-        });
+
+        if (PageDetect.isMilestone()) {
+            attachIssueListMutationObserver(ownerName, repoName, store);
+        }
+        addPRLinksToIssueList(ownerName, repoName, store);
     }
 
     function removeAddedContainers() {
         document.querySelectorAll(`.${CLASS_CONTAINER}`).forEach(e => e.remove());
+    }
+
+    /**
+     * Attaches on observer for mutations to the issue list, e.g. if someone modifies
+     * a milestone, the whole issue list reloads and we need to re-run.
+     */
+    function attachIssueListMutationObserver(owner: string, repo: string, store: GithubStore) {
+        async function onMutation() {
+            await GithubPageReadyWaiter.await();
+            addPRLinksToIssueList(owner, repo, store);
+        }
+
+        const milestoneIssueElement = document.querySelector(GithubDOMIssueList.SELECTOR_ISSUES_LISTING);
+        if (milestoneIssueElement) {
+            const issueListElementObserver = new MutationObserver(onMutation);
+            issueListElementObserver.observe(milestoneIssueElement, {childList: true});
+        }
+    }
+
+    function addPRLinksToIssueList(owner: string, repo: string, store: GithubStore) {
+        GithubDOMIssueList.forEachIssue(async issueElement => {
+            const issueNum = getIssueNumFromIssueElement(issueElement);
+            const prs = await store.getIssueToPRs(issueNum);
+            addPRLinkToIssue(owner, repo, issueElement, prs);
+        });
     }
 
     function getIssueNumFromIssueElement(issueElement: HTMLElement): number {
