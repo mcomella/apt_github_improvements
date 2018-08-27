@@ -6,7 +6,7 @@
 class GithubFetchChecker {
 
     private static readonly OPEN_PR_BETWEEN_FETCH_MILLIS = 5 /* min */ * 60 /* to sec */ * 1000; /* to millis */
-    private static readonly PR_BETWEEN_UPDATE_MILLIS = 45 /* min */ * 60 /* to sec */ * 1000; /* to millis */
+    private static readonly PR_BETWEEN_UPDATE_MILLIS = 4 /* hr */ * 60 /* min */ * 60 /* to sec */ * 1000; /* to millis */
 
     private readonly store: GithubStore;
 
