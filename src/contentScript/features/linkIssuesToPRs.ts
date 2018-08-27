@@ -15,7 +15,7 @@ namespace FeatureLinkIssuesToPRs {
         }
     }
 
-    function injectPRPage(containerElement: HTMLDivElement, referencedIssues: Set<number>) {
+    async function injectPRPage(containerElement: HTMLDivElement, referencedIssues: Set<number>) {
         if (referencedIssues.size <= 0) { return; }
 
         const {ownerName, repoName} = PageDetect.getOwnerAndRepo();
@@ -24,7 +24,7 @@ namespace FeatureLinkIssuesToPRs {
         const docFrag = DOM.getTitleLinkList(title, issues, (linkElement: HTMLAnchorElement, issueNum: number) => {
             linkElement.text = '#' + issueNum;
             linkElement.href = GithubURLs.issueFromNumber(ownerName, repoName, issueNum);
-        }, newLinkElement());
+        }, await newAnnotation());
 
         containerElement.appendChild(docFrag);
     }
@@ -45,15 +45,29 @@ namespace FeatureLinkIssuesToPRs {
         const docFrag = DOM.getTitleLinkList('PRs which address this issue', prsArray, (linkElement: HTMLAnchorElement, prNum: number) => {
             linkElement.text = `#${prNum}`;
             linkElement.href = GithubURLs.prFromNumber(ownerName, repoName, prNum);
-        }, newLinkElement());
+        }, await newAnnotation());
 
         containerElement.appendChild(docFrag);
     }
 
-    function newLinkElement(): HTMLAnchorElement {
-        const linkElement = document.createElement('a');
-        linkElement.innerText = 'how?';
-        linkElement.href = 'https://github.com/mcomella/apt_github_improvements/blob/master/docs/features/link_issues_to_prs.md#criteria-for-prs-that-address-issues';
-        return linkElement;
+    async function newAnnotation(): Promise<DocumentFragment> {
+        const frag = document.createDocumentFragment();
+
+        const howElement = document.createElement('a');
+        howElement.innerText = 'how?';
+        howElement.href = 'https://github.com/mcomella/apt_github_improvements/blob/master/docs/features/link_issues_to_prs.md#criteria-for-prs-that-address-issues';
+        frag.appendChild(howElement);
+
+        const accessToken = await OptionsStore.getPersonalAccessToken();
+        if (!accessToken.trim()) {
+            frag.appendChild(document.createTextNode(', '));
+
+            const tokenElement = document.createElement('a');
+            tokenElement.innerText = 'tip - add an access token';
+            tokenElement.href = 'https://github.com/mcomella/apt_github_improvements/blob/master/docs/add_an_access_token.md';
+            frag.appendChild(tokenElement);
+        }
+
+        return frag;
     }
 }

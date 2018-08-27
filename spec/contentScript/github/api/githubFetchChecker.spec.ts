@@ -116,7 +116,7 @@ describe('The GithubFetchChecker', () => {
 
     function getSignicantlyEarlier(date: Date): Date {
         const earlier = new Date();
-        earlier.setTime(date.getTime() - 120 /* min */ * 60 /* to sec */ * 1000 /* to millis */);
+        earlier.setTime(date.getTime() - 5 /* hr */ * 60 /* min */ * 60 /* to sec */ * 1000 /* to millis */);
         return earlier;
     }
 
