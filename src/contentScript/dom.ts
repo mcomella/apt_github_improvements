@@ -6,9 +6,9 @@
 namespace DOM {
 
     /** Gets list with a title and each link styled by the given function. */
-    export function getTitleLinkList<T>(title: string, listItems: T[], forEachItem: Function, aElement?: HTMLAnchorElement): DocumentFragment {
+    export function getTitleLinkList<T>(title: string, listItems: T[], forEachItem: Function, annotation?: DocumentFragment): DocumentFragment {
         const frag = document.createDocumentFragment();
-        frag.appendChild(newTitleElement(title, aElement));
+        frag.appendChild(newTitleElement(title, annotation));
         const ulElement = newULElement();
         frag.appendChild(ulElement);
 
@@ -24,15 +24,15 @@ namespace DOM {
         return frag;
     }
 
-    function newTitleElement(title: string, linkElement?: HTMLAnchorElement): HTMLParagraphElement {
+    function newTitleElement(title: string, annotation?: DocumentFragment): HTMLParagraphElement {
         const titleElement = document.createElement('p');
         titleElement.style.marginBottom = '0px'; // override GH style.
 
-        if (!linkElement) {
+        if (!annotation) {
             titleElement.appendChild(new Text(`${title}:`));
         } else {
             titleElement.appendChild(new Text(`${title} (`));
-            titleElement.appendChild(linkElement);
+            titleElement.appendChild(annotation);
             titleElement.appendChild(new Text('):'));
         }
 
