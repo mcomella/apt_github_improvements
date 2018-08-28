@@ -6,10 +6,6 @@ The Android Product Team (APT) at Mozilla uses GitHub to develop their products 
 ### Features
 For an overview of how we decide which features make it into the project, see [Feature Philosophy].
 
-Some features access the GitHub API: it is [highly recommended to add a GitHub access token](docs/add_an_access_token.md) to avoid restricting them.
-
-For an explanation of permissions required by the add-on, see [permissions.md](docs/permissions.md).
-
 Features for general GitHub users:
 - [Link Issues to Pull Requests](docs/features/link_issues_to_prs.md)
 - [Link Issue Numbers in Pull Request titles](docs/features/link_issues_in_pr_titles.md)
@@ -18,6 +14,11 @@ Features for general GitHub users:
 Features for APT/Mozilla specifically (these will generally not appear when the user is not on APT/Mozilla repositories):
 - [Story Points](docs/features/story_points.md)
 - [Hoist Bugzilla bug links to the top of the issue](docs/features/hoist_bugzilla_bugs_to_top_of_issue.md)
+
+### Usage
+Some features access the GitHub API: it is [**highly recommended** to add a GitHub access token](docs/add_an_access_token.md) to avoid restricting them.
+
+For an explanation of **required permissions**, see [permissions.md](docs/permissions.md).
 
 ### Project Resources
 * Open issues: https://github.com/mcomella/apt_github_improvements/issues
