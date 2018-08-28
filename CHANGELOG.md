@@ -41,7 +41,7 @@ and it's easier for the APT team to get new updates in one add-on.
 - Requires `bugzilla.mozilla.org/rest` webRequest permission
 - Relicensed from X11 to MPLv2
 
-## [0.1.0] - 2018-05-30
+## 0.1.0 - 2018-05-30
 
 ### Added
 - "Unlabeled" and "multiple label" counts
@@ -49,7 +49,12 @@ and it's easier for the APT team to get new updates in one add-on.
 ### Removed
 - Unused api.github.com permission
 
-## [0.0.1] - 2018-05-12
+## 0.0.1 - 2018-05-12
 ### Added
 - Released as GitHub Story Points on addons.mozilla.org.
 - Count the number of size S, M, and L labels
+
+[0.4.0]: https://github.com/mcomella/apt_github_improvements/compare/v0.3.0...v0.4.0
+[0.3.0]: https://github.com/mcomella/apt_github_improvements/compare/v0.2.1...v0.3.0
+[0.2.1]: https://github.com/mcomella/apt_github_improvements/compare/v0.2.0...v0.2.1
+[0.2.0]: https://github.com/mcomella/apt_github_improvements/compare/f62757034ce87c4cdf3da9f905df6f3b18f466e3...v0.2.0
