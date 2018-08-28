@@ -8,6 +8,8 @@ For an overview of how we decide which features make it into the project, see [F
 
 Some features access the GitHub API: it is [highly recommended to add a GitHub access token](docs/add_an_access_token.md) to avoid restricting them.
 
+For an explanation of permissions required by the add-on, see [permissions.md](docs/permissions.md).
+
 Features for general GitHub users:
 - [Link Issues to Pull Requests](docs/features/link_issues_to_prs.md)
 - [Link Issue Numbers in Pull Request titles](docs/features/link_issues_in_pr_titles.md)
