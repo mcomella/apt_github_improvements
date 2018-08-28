@@ -21,3 +21,11 @@ npm test && \
         LICENSE \
         README.md \
         manifest.json
+
+# Package source.
+tar \
+    --exclude='./.*' \
+    --exclude='./node_modules' \
+    --exclude='./sb' \
+    --exclude='./dist' \
+    -czf dist/source.tar.gz .
