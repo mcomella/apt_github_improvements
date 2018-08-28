@@ -14,7 +14,8 @@ fi
 rm -rf dist/
 mkdir dist/
 
-npm test && \ # Also runs build.
+# test also runs build.
+npm test && \
     zip -r -FS dist/bundle.xpi \
         dist/src/ \
         LICENSE \
