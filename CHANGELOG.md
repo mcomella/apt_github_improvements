@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.4.1] - 2018-08-28
+*Version bump: we did not upload correctly and couldn't continue to use the v0.4.0 version number.*
+
 ## [0.4.0] - 2018-08-28
 ### Added
 - Feature to adds links between PRs and the issues they reference (#4)
