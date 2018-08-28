@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [0.4.0] - 2018-08-28
 ### Added
 - Feature to adds links between PRs and the issues they reference (#4)
 - Feature to indicate PRs that address issues in the issues list (#6)
