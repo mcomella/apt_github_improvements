@@ -5,9 +5,8 @@
 describe('A GithubStore', () => {
 
     class LocalMockGithubStore extends MockGithubStore {
-        async maybeUpgrade(newVersion?: number) {
-            super.maybeUpgrade(newVersion);
-        }
+        async maybeUpgrade() { super.maybeUpgrade() }
+        async maybeUpgradeToVersion(v: number) { super.maybeUpgradeToVersion(v); }
     }
 
     const ORG = 'moz';
@@ -29,7 +28,7 @@ describe('A GithubStore', () => {
     });
 
     it('inits the DB with the current version when empty', async () => {
-        await testStore.maybeUpgrade()
+        await testStore.maybeUpgrade();
         expect(Object.keys(backingData).length).toBe(1)
         expect(backingData[Store.KEY_DB_VERSION]).toEqual(Store.DB_VERSION)
     });
@@ -213,6 +212,61 @@ describe('A GithubStore', () => {
     it('given an empty DB, gets undefined for the open pr last fetch millis', async () => {
         const actual = await testStore.getRepoOpenPRLastFetchDate();
         expect(actual).toBeUndefined();
+    });
+
+    describe('given a non-current DB version', () => {
+        function setDBVersion(v: number) { backingData[MockGithubStore.KEY_DB_VERSION] = v; }
+
+        it('will upgrade the stored DB version to the latest version', async () => {
+            setDBVersion(1); // arbitrary version.
+            await testStore.maybeUpgrade();
+            expect(backingData[MockGithubStore.KEY_DB_VERSION]).toEqual(MockGithubStore.DB_VERSION);
+        });
+
+        describe('when upgrading from DB version 1 to 2', () => {
+            async function testUpgrade() { await testStore.maybeUpgradeToVersion(2); }
+
+            beforeEach(() => { setDBVersion(1); })
+
+            it('then it will not modify OptionsStore settings', async () => {
+                const expected = 'whatever';
+                backingData[OptionsStore.KEY_PERSONAL_ACCESS_TOKEN] = expected;
+                await testUpgrade();
+                expect(Object.keys(backingData).length).toEqual(2); // this key and DB version.
+                expect(backingData[OptionsStore.KEY_PERSONAL_ACCESS_TOKEN]).toEqual(expected);
+            });
+
+            it('and there are no date keys then it will not remove any keys', async () => {
+                backingData[getKeyIssueToPR(42)] = [87, 53];
+                await testUpgrade();
+                expect(Object.keys(backingData).length).toEqual(2); // this key and DB version.
+            });
+
+            it('and there are no date keys then it will not modify any issue to PR values', async () => {
+                const key = getKeyIssueToPR(42);
+                const expected = [87, 53];
+                backingData[key] = expected;
+                await testUpgrade();
+                expect(backingData[key]).toEqual(expected);
+            });
+
+            it('and the DB contains date keys then it will remove date keys but not other keys', async () => {
+                backingData[OptionsStore.KEY_PERSONAL_ACCESS_TOKEN] = 'whatever';
+                backingData[getKeyIssueToPR(42)] = [87, 53];
+
+                const dateKeys = [
+                    getKeyPRLastUpdate(87),
+                    getKeyPRLastUpdate(53),
+                    getKeyRepoOpenPRLastFetchMillis(),
+                ];
+                dateKeys.forEach(key => backingData[key] = 12345);
+
+                await testUpgrade();
+
+                expect(Object.keys(backingData).length).toEqual(3);
+                dateKeys.forEach(key => expect(backingData[key]).toBeFalsy(key));
+            });
+        });
     });
 
     function getMockStorage() {

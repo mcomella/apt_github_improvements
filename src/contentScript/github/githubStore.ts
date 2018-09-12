@@ -14,6 +14,8 @@ class GithubStore {
     }
 
     private static readonly PREFIX_KEY = 'ghs';
+    private static readonly PREFIX_PR_LAST_UPDATED = `${GithubStore.PREFIX_KEY}-prLastUpdate`;
+    private static readonly PREFIX_REPO_OPEN_PR_LAST_FETCH = `${GithubStore.PREFIX_KEY}-openPRLastFetch`;
 
     protected static readonly DB_VERSION = 1;
     protected static readonly KEY_DB_VERSION = `${GithubStore.PREFIX_KEY}-v`
@@ -28,18 +30,24 @@ class GithubStore {
         this.storage = storage;
     }
 
-    protected async maybeUpgrade(_newVersion?: number) {
-        if (!_newVersion) { _newVersion = GithubStore.DB_VERSION; }
+    protected async maybeUpgrade() { this.maybeUpgradeToVersion(GithubStore.DB_VERSION); }
 
+    protected async maybeUpgradeToVersion(newVersion: number) {
         const keyVersion = GithubStore.KEY_DB_VERSION;
-        const dbVersion = (await this.storage.get(keyVersion))[keyVersion];
-        if (!dbVersion) {
-            const storageObj = {} as StrToAny;
-            storageObj[keyVersion] = GithubStore.DB_VERSION;
-            await this.storage.set(storageObj);
-        } else if (dbVersion !== GithubStore.DB_VERSION) {
-            // Upgrade for future versions...
+        const currentVersion = (await this.storage.get(keyVersion))[keyVersion] as number | undefined;
+        if (currentVersion !== newVersion) {
+            if (currentVersion) {
+                await this.upgrade(currentVersion, newVersion);
+            }
+
+            await this.storeLatestDBVersion();
         }
+    }
+
+    private async storeLatestDBVersion() {
+        const storageObj = {} as StrToAny;
+        storageObj[GithubStore.KEY_DB_VERSION] = GithubStore.DB_VERSION;
+        await this.storage.set(storageObj);
     }
 
     async getIssuesToPRs(issueNums: number[]): Promise<NumToNumSet> {
@@ -129,14 +137,35 @@ class GithubStore {
     }
 
     protected getKeyRepoOpenPRLastFetchDate(): string {
-        return `${GithubStore.PREFIX_KEY}-openPRLastFetch-${this.ownerRepo}`;
+        return `${GithubStore.PREFIX_REPO_OPEN_PR_LAST_FETCH}-${this.ownerRepo}`;
     }
 
     private getKeyPRLastUpdated(prNum: number): string {
-        return `${GithubStore.PREFIX_KEY}-prLastUpdate-${this.ownerRepo}/${prNum}`;
+        return `${GithubStore.PREFIX_PR_LAST_UPDATED}-${this.ownerRepo}/${prNum}`;
     }
 
     private getKeyIssueToPR(issueNum: number): string {
         return `${GithubStore.PREFIX_KEY}-issue-${this.ownerRepo}/${issueNum}`;
+    }
+
+    private async upgrade(currentVersion: number, newVersion: number) {
+        for (let i = currentVersion; i < newVersion; i++) {
+            switch (currentVersion) {
+                case 1: this.upgrade1To2(); break;
+            }
+        }
+    }
+
+    // Stored date format changed from storing Date to date millis. Since the date keys don't
+    // appear to be in the format we'd expect, we must delete them all.
+    private async upgrade1To2() {
+        function keyMatchesFetchDate(key: string): boolean {
+            return key.startsWith(GithubStore.PREFIX_REPO_OPEN_PR_LAST_FETCH) ||
+                    key.startsWith(GithubStore.PREFIX_PR_LAST_UPDATED);
+        }
+
+        const storeKeyToVal = await this.storage.get() as StrToAny;
+        const keysToRemove = Object.keys(storeKeyToVal).filter(keyMatchesFetchDate);
+        await this.storage.remove(keysToRemove);
     }
 }
