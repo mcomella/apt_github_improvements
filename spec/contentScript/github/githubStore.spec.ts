@@ -218,9 +218,11 @@ describe('A GithubStore', () => {
     function getMockStorage() {
         const backingData = {} as StrToAny;
         const mockStore = {
-            get: (inputKeys: string | string[]) => {
+            get: (inputKeys: string | string[] | undefined) => {
                 let keys: string[];
-                if (inputKeys.constructor === String) {
+                if (!inputKeys) {
+                    keys = Object.keys(backingData);
+                } else if (inputKeys.constructor === String) {
                     keys = [inputKeys] as string[];
                 } else {
                     keys = inputKeys as string[];
