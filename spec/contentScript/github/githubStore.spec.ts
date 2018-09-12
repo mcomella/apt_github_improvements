@@ -242,6 +242,9 @@ describe('A GithubStore', () => {
                 });
                 return Promise.resolve();
             },
+            remove: (keys: string[]) => {
+                keys.forEach(key => delete backingData[key]);
+            },
         } as StorageArea;
 
         return {
