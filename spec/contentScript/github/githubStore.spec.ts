@@ -5,8 +5,8 @@
 describe('A GithubStore', () => {
 
     class LocalMockGithubStore extends MockGithubStore {
-        async maybeUpgrade() { super.maybeUpgrade() }
-        async maybeUpgradeToVersion(v: number) { super.maybeUpgradeToVersion(v); }
+        async maybeUpgrade() { await super.maybeUpgrade() }
+        async maybeUpgradeToVersion(v: number) { await super.maybeUpgradeToVersion(v); }
     }
 
     const ORG = 'moz';

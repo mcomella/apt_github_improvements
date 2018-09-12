@@ -17,7 +17,7 @@ class GithubStore {
     private static readonly PREFIX_PR_LAST_UPDATED = `${GithubStore.PREFIX_KEY}-prLastUpdate`;
     private static readonly PREFIX_REPO_OPEN_PR_LAST_FETCH = `${GithubStore.PREFIX_KEY}-openPRLastFetch`;
 
-    protected static readonly DB_VERSION = 1;
+    protected static readonly DB_VERSION = 2;
     protected static readonly KEY_DB_VERSION = `${GithubStore.PREFIX_KEY}-v`
 
     private static readonly RE_KEY_ISSUE_TO_PR = /([0-9]+)$/
