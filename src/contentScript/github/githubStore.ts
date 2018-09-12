@@ -102,7 +102,7 @@ class GithubStore {
 
             const remotePRLastUpdatedKeys = Array.from(remoteOpenPRs).map(pr => { return this.getKeyPRLastUpdated(pr); });
             remotePRLastUpdatedKeys.forEach(keyPRLastUpdated => {
-                toStore[keyPRLastUpdated] = now;
+                toStore[keyPRLastUpdated] = now.getTime();
             });
         }
 
@@ -110,19 +110,25 @@ class GithubStore {
     }
 
     async getPRLastUpdatedMillis(prNum: number): Promise<Date | undefined> {
-        const key = this.getKeyPRLastUpdated(prNum);
-        return (await this.storage.get(key))[key];
+        return this.getDateFromDB(this.getKeyPRLastUpdated(prNum));
     }
 
     async getRepoOpenPRLastFetchMillis(): Promise<Date | undefined> {
-        const key = this.getKeyRepoOpenPRLastFetchMillis();
-        return (await this.storage.get(key))[key];
+        return this.getDateFromDB(this.getKeyRepoOpenPRLastFetchMillis());
+    }
+
+    private async getDateFromDB(key: string): Promise<Date | undefined> {
+        const dateMillis = (await this.storage.get(key))[key] as number | undefined;
+        if (!dateMillis) {
+            return undefined;
+        }
+        return new Date(dateMillis);
     }
 
     async setRepoOpenPRLastFetchMillis(now: Date): Promise<void> {
         const key = this.getKeyRepoOpenPRLastFetchMillis();
         const toStore = {} as StrToAny;
-        toStore[key] = now;
+        toStore[key] = now.getTime();
         return this.storage.set(toStore);
     }
 
