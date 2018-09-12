@@ -48,6 +48,6 @@ class GithubSynchronizer {
         const newIssuesToPRs = GithubDataTransformer.fetchedPRsToIssuesToPRs(prsWithCommits);
         this.store.mergeIssueToPRs(newIssuesToPRs); // Sets last update millis on PRs.
 
-        await this.store.setRepoOpenPRLastFetchMillis(now);
+        await this.store.setRepoOpenPRLastFetchDate(now);
     }
 }

@@ -109,12 +109,12 @@ class GithubStore {
         return this.storage.set(toStore);
     }
 
-    async getPRLastUpdatedMillis(prNum: number): Promise<Date | undefined> {
+    async getPRLastUpdatedDate(prNum: number): Promise<Date | undefined> {
         return this.getDateFromDB(this.getKeyPRLastUpdated(prNum));
     }
 
-    async getRepoOpenPRLastFetchMillis(): Promise<Date | undefined> {
-        return this.getDateFromDB(this.getKeyRepoOpenPRLastFetchMillis());
+    async getRepoOpenPRLastFetchDate(): Promise<Date | undefined> {
+        return this.getDateFromDB(this.getKeyRepoOpenPRLastFetchDate());
     }
 
     private async getDateFromDB(key: string): Promise<Date | undefined> {
@@ -125,14 +125,14 @@ class GithubStore {
         return new Date(dateMillis);
     }
 
-    async setRepoOpenPRLastFetchMillis(now: Date): Promise<void> {
-        const key = this.getKeyRepoOpenPRLastFetchMillis();
+    async setRepoOpenPRLastFetchDate(now: Date): Promise<void> {
+        const key = this.getKeyRepoOpenPRLastFetchDate();
         const toStore = {} as StrToAny;
         toStore[key] = now.getTime();
         return this.storage.set(toStore);
     }
 
-    protected getKeyRepoOpenPRLastFetchMillis(): string {
+    protected getKeyRepoOpenPRLastFetchDate(): string {
         return `${GithubStore.PREFIX_KEY}-openPRLastFetch-${this.ownerRepo}`;
     }
 

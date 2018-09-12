@@ -185,18 +185,18 @@ describe('A GithubStore', () => {
         const key = getKeyPRLastUpdate(10);
         backingData[key] = now;
 
-        const actual = await testStore.getPRLastUpdatedMillis(10);
+        const actual = await testStore.getPRLastUpdatedDate(10);
         expect(actual).toEqual(now);
     });
 
     it('given an empty DB, gets undefined for a PR\'s last update time', async () => {
-        const actual = await testStore.getPRLastUpdatedMillis(10);
+        const actual = await testStore.getPRLastUpdatedDate(10);
         expect(actual).toBeUndefined();
     });
 
     it('sets the open pr last fetch millis to the given value', async () => {
         const now = new Date();
-        await testStore.setRepoOpenPRLastFetchMillis(now);
+        await testStore.setRepoOpenPRLastFetchDate(now);
         const key = getKeyRepoOpenPRLastFetchMillis();
         expect(backingData[key]).toEqual(now.getTime());
     });
@@ -206,12 +206,12 @@ describe('A GithubStore', () => {
         const key = getKeyRepoOpenPRLastFetchMillis();
         backingData[key] = expected;
 
-        const actual = await testStore.getRepoOpenPRLastFetchMillis();
+        const actual = await testStore.getRepoOpenPRLastFetchDate();
         expect(actual).toEqual(expected);
     });
 
     it('given an empty DB, gets undefined for the open pr last fetch millis', async () => {
-        const actual = await testStore.getRepoOpenPRLastFetchMillis();
+        const actual = await testStore.getRepoOpenPRLastFetchDate();
         expect(actual).toBeUndefined();
     });
 
