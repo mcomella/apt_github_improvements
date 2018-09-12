@@ -8,7 +8,7 @@ type StorageArea = browser.storage.StorageArea;
 class GithubStore {
 
     static async get(owner: string, repo: string): Promise<GithubStore> {
-        const store = new GithubStore(owner, repo);
+        const store = new GithubStore(owner, repo, browser.storage.local);
         await store.maybeUpgrade();
         return store;
     }
@@ -23,13 +23,9 @@ class GithubStore {
     private readonly ownerRepo: string;
     private readonly storage: StorageArea;
 
-    protected constructor(owner: string, repo: string, _storage?: StorageArea) {
+    protected constructor(owner: string, repo: string, storage: StorageArea) {
         this.ownerRepo = `${owner}/${repo}`;
-        if (!_storage) {
-            this.storage = browser.storage.local;
-        } else {
-            this.storage = _storage;
-        }
+        this.storage = storage;
     }
 
     protected async maybeUpgrade(_newVersion?: number) {
