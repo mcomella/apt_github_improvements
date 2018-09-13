@@ -223,6 +223,20 @@ describe('A GithubStore', () => {
             expect(backingData[MockGithubStore.KEY_DB_VERSION]).toEqual(MockGithubStore.DB_VERSION);
         });
 
+        it('when it needs an upgrade then it will only upgrade the DB once', async () => {
+            // We arbitrarily test the upgrade from 1 to 2.
+            const key = getKeyRepoOpenPRLastFetchMillis();
+            setDBVersion(1);
+
+            backingData[key] = new Date();
+            await testStore.maybeUpgradeToVersion(2);
+            expect(Object.keys(backingData).length).toEqual(1); // Removes key.
+
+            backingData[key] = new Date();
+            await testStore.maybeUpgradeToVersion(2);
+            expect(Object.keys(backingData).length).toEqual(2); // No remove, already upgraded.
+        });
+
         describe('when upgrading from DB version 1 to 2', () => {
             async function testUpgrade() { await testStore.maybeUpgradeToVersion(2); }
 
@@ -259,7 +273,7 @@ describe('A GithubStore', () => {
                     getKeyPRLastUpdate(53),
                     getKeyRepoOpenPRLastFetchMillis(),
                 ];
-                dateKeys.forEach(key => backingData[key] = 12345);
+                dateKeys.forEach(key => backingData[key] = new Date());
 
                 await testUpgrade();
 
