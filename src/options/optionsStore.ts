@@ -5,7 +5,7 @@
 /** Storage for preferences set by the user. */
 namespace OptionsStore {
     const PREFIX_KEY = 'opt';
-    const KEY_PERSONAL_ACCESS_TOKEN = `${PREFIX_KEY}-gh-access-token`;
+    export const KEY_PERSONAL_ACCESS_TOKEN = `${PREFIX_KEY}-gh-access-token`;
 
     export async function getPersonalAccessToken(): Promise<string> {
         const token = (await getStorage().get(KEY_PERSONAL_ACCESS_TOKEN))[KEY_PERSONAL_ACCESS_TOKEN];

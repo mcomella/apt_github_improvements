@@ -5,9 +5,8 @@
 describe('A GithubStore', () => {
 
     class LocalMockGithubStore extends MockGithubStore {
-        async maybeUpgrade(newVersion?: number) {
-            super.maybeUpgrade(newVersion);
-        }
+        async maybeUpgrade() { await super.maybeUpgrade() }
+        async maybeUpgradeToVersion(v: number) { await super.maybeUpgradeToVersion(v); }
     }
 
     const ORG = 'moz';
@@ -29,7 +28,7 @@ describe('A GithubStore', () => {
     });
 
     it('inits the DB with the current version when empty', async () => {
-        await testStore.maybeUpgrade()
+        await testStore.maybeUpgrade();
         expect(Object.keys(backingData).length).toBe(1)
         expect(backingData[Store.KEY_DB_VERSION]).toEqual(Store.DB_VERSION)
     });
@@ -185,20 +184,20 @@ describe('A GithubStore', () => {
         const key = getKeyPRLastUpdate(10);
         backingData[key] = now;
 
-        const actual = await testStore.getPRLastUpdatedMillis(10);
-        expect(actual).toBe(now);
+        const actual = await testStore.getPRLastUpdatedDate(10);
+        expect(actual).toEqual(now);
     });
 
     it('given an empty DB, gets undefined for a PR\'s last update time', async () => {
-        const actual = await testStore.getPRLastUpdatedMillis(10);
+        const actual = await testStore.getPRLastUpdatedDate(10);
         expect(actual).toBeUndefined();
     });
 
     it('sets the open pr last fetch millis to the given value', async () => {
         const now = new Date();
-        await testStore.setRepoOpenPRLastFetchMillis(now);
+        await testStore.setRepoOpenPRLastFetchDate(now);
         const key = getKeyRepoOpenPRLastFetchMillis();
-        expect(backingData[key]).toBe(now);
+        expect(backingData[key]).toEqual(now.getTime());
     });
 
     it('given an open pr last fetch millis in the DB, gets it', async () => {
@@ -206,21 +205,92 @@ describe('A GithubStore', () => {
         const key = getKeyRepoOpenPRLastFetchMillis();
         backingData[key] = expected;
 
-        const actual = await testStore.getRepoOpenPRLastFetchMillis();
-        expect(actual).toBe(expected);
+        const actual = await testStore.getRepoOpenPRLastFetchDate();
+        expect(actual).toEqual(expected);
     });
 
     it('given an empty DB, gets undefined for the open pr last fetch millis', async () => {
-        const actual = await testStore.getRepoOpenPRLastFetchMillis();
+        const actual = await testStore.getRepoOpenPRLastFetchDate();
         expect(actual).toBeUndefined();
+    });
+
+    describe('given a non-current DB version', () => {
+        function setDBVersion(v: number) { backingData[MockGithubStore.KEY_DB_VERSION] = v; }
+
+        it('will upgrade the stored DB version to the latest version', async () => {
+            setDBVersion(1); // arbitrary version.
+            await testStore.maybeUpgrade();
+            expect(backingData[MockGithubStore.KEY_DB_VERSION]).toEqual(MockGithubStore.DB_VERSION);
+        });
+
+        it('when it needs an upgrade then it will only upgrade the DB once', async () => {
+            // We arbitrarily test the upgrade from 1 to 2.
+            const key = getKeyRepoOpenPRLastFetchMillis();
+            setDBVersion(1);
+
+            backingData[key] = new Date();
+            await testStore.maybeUpgradeToVersion(2);
+            expect(Object.keys(backingData).length).toEqual(1); // Removes key.
+
+            backingData[key] = new Date();
+            await testStore.maybeUpgradeToVersion(2);
+            expect(Object.keys(backingData).length).toEqual(2); // No remove, already upgraded.
+        });
+
+        describe('when upgrading from DB version 1 to 2', () => {
+            async function testUpgrade() { await testStore.maybeUpgradeToVersion(2); }
+
+            beforeEach(() => { setDBVersion(1); })
+
+            it('then it will not modify OptionsStore settings', async () => {
+                const expected = 'whatever';
+                backingData[OptionsStore.KEY_PERSONAL_ACCESS_TOKEN] = expected;
+                await testUpgrade();
+                expect(Object.keys(backingData).length).toEqual(2); // this key and DB version.
+                expect(backingData[OptionsStore.KEY_PERSONAL_ACCESS_TOKEN]).toEqual(expected);
+            });
+
+            it('and there are no date keys then it will not remove any keys', async () => {
+                backingData[getKeyIssueToPR(42)] = [87, 53];
+                await testUpgrade();
+                expect(Object.keys(backingData).length).toEqual(2); // this key and DB version.
+            });
+
+            it('and there are no date keys then it will not modify any issue to PR values', async () => {
+                const key = getKeyIssueToPR(42);
+                const expected = [87, 53];
+                backingData[key] = expected;
+                await testUpgrade();
+                expect(backingData[key]).toEqual(expected);
+            });
+
+            it('and the DB contains date keys then it will remove date keys but not other keys', async () => {
+                backingData[OptionsStore.KEY_PERSONAL_ACCESS_TOKEN] = 'whatever';
+                backingData[getKeyIssueToPR(42)] = [87, 53];
+
+                const dateKeys = [
+                    getKeyPRLastUpdate(87),
+                    getKeyPRLastUpdate(53),
+                    getKeyRepoOpenPRLastFetchMillis(),
+                ];
+                dateKeys.forEach(key => backingData[key] = new Date());
+
+                await testUpgrade();
+
+                expect(Object.keys(backingData).length).toEqual(3);
+                dateKeys.forEach(key => expect(backingData[key]).toBeFalsy(key));
+            });
+        });
     });
 
     function getMockStorage() {
         const backingData = {} as StrToAny;
         const mockStore = {
-            get: (inputKeys: string | string[]) => {
+            get: (inputKeys: string | string[] | undefined) => {
                 let keys: string[];
-                if (inputKeys.constructor === String) {
+                if (!inputKeys) {
+                    keys = Object.keys(backingData);
+                } else if (inputKeys.constructor === String) {
                     keys = [inputKeys] as string[];
                 } else {
                     keys = inputKeys as string[];
@@ -239,6 +309,9 @@ describe('A GithubStore', () => {
                     backingData[key] = items[key];
                 });
                 return Promise.resolve();
+            },
+            remove: (keys: string[]) => {
+                keys.forEach(key => delete backingData[key]);
             },
         } as StorageArea;
 

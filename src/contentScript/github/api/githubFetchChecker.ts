@@ -15,7 +15,7 @@ class GithubFetchChecker {
     }
 
     async isOpenPRsFetchReady(now: Date): Promise<boolean> {
-        const lastUpdateMillis = await this.store.getRepoOpenPRLastFetchMillis();
+        const lastUpdateMillis = await this.store.getRepoOpenPRLastFetchDate();
         if (!lastUpdateMillis) {
             return true;
         }
@@ -24,7 +24,7 @@ class GithubFetchChecker {
     }
 
     async isPRFetchReady(prNum: number, now: Date): Promise<boolean> {
-        const lastUpdateMillis = await this.store.getPRLastUpdatedMillis(prNum);
+        const lastUpdateMillis = await this.store.getPRLastUpdatedDate(prNum);
         if (!lastUpdateMillis) {
             return true;
         }

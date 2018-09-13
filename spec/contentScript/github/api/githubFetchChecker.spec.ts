@@ -14,7 +14,7 @@ describe('The GithubFetchChecker', () => {
 
     describe('when checking if the open PRs are ready fetch', () => {
         it('if the DB is empty, will return undefined', async () => {
-            spyOn(mockStore, 'getRepoOpenPRLastFetchMillis').and.returnValue(undefined);
+            spyOn(mockStore, 'getRepoOpenPRLastFetchDate').and.returnValue(undefined);
             const actual = await testChecker.isOpenPRsFetchReady(new Date());
             expect(actual).toBe(true);
         });
@@ -23,7 +23,7 @@ describe('The GithubFetchChecker', () => {
             const now = new Date();
             const later = getLater(now);
 
-            spyOn(mockStore, 'getRepoOpenPRLastFetchMillis').and.returnValue(later);
+            spyOn(mockStore, 'getRepoOpenPRLastFetchDate').and.returnValue(later);
             const actual = await testChecker.isOpenPRsFetchReady(now);
             expect(actual).toBe(false);
         });
@@ -32,7 +32,7 @@ describe('The GithubFetchChecker', () => {
             const now = new Date();
             const earlier = getSignicantlyEarlier(now);
 
-            spyOn(mockStore, 'getRepoOpenPRLastFetchMillis').and.returnValue(earlier);
+            spyOn(mockStore, 'getRepoOpenPRLastFetchDate').and.returnValue(earlier);
             const actual = await testChecker.isOpenPRsFetchReady(now);
             expect(actual).toBe(true);
         });
@@ -40,7 +40,7 @@ describe('The GithubFetchChecker', () => {
 
     describe('when checking if a PR is ready to fetch', () => {
         it('if the DB is empty, will return true', async () => {
-            spyOn(mockStore, 'getPRLastUpdatedMillis').and.returnValue(undefined);
+            spyOn(mockStore, 'getPRLastUpdatedDate').and.returnValue(undefined);
             const actual = await testChecker.isPRFetchReady(10, new Date());
             expect(actual).toBe(true);
         });
@@ -49,7 +49,7 @@ describe('The GithubFetchChecker', () => {
             const now = new Date();
             const later = getLater(now);
 
-            spyOn(mockStore, 'getPRLastUpdatedMillis').and.returnValue(later);
+            spyOn(mockStore, 'getPRLastUpdatedDate').and.returnValue(later);
             const actual = await testChecker.isPRFetchReady(10, now);
             expect(actual).toBe(false);
         });
@@ -58,7 +58,7 @@ describe('The GithubFetchChecker', () => {
             const now = new Date();
             const earlier = getSignicantlyEarlier(now);
 
-            spyOn(mockStore, 'getPRLastUpdatedMillis').and.returnValue(earlier);
+            spyOn(mockStore, 'getPRLastUpdatedDate').and.returnValue(earlier);
             const actual = await testChecker.isPRFetchReady(10, now);
             expect(actual).toBe(true);
         });
@@ -71,7 +71,7 @@ describe('The GithubFetchChecker', () => {
         });
 
         it('will keep items where their last fetch millis is not in the DB', async () => {
-            spyOn(mockStore, 'getPRLastUpdatedMillis').and.returnValue(undefined);
+            spyOn(mockStore, 'getPRLastUpdatedDate').and.returnValue(undefined);
             const actual = await testChecker.filterPRsFetchReady([{number: 10}], new Date());
             expect(actual.length).toBe(1);
             expect(actual[0].number).toBe(10);
@@ -81,7 +81,7 @@ describe('The GithubFetchChecker', () => {
             const now = new Date();
             const earlier = getSignicantlyEarlier(now);
 
-            spyOn(mockStore, 'getPRLastUpdatedMillis').and.returnValue(earlier);
+            spyOn(mockStore, 'getPRLastUpdatedDate').and.returnValue(earlier);
             const actual = await testChecker.filterPRsFetchReady([{number: 10}], now);
             expect(actual.length).toBe(1);
             expect(actual[0].number).toBe(10);
@@ -91,7 +91,7 @@ describe('The GithubFetchChecker', () => {
             const now = new Date();
             const later = getLater(now);
 
-            spyOn(mockStore, 'getPRLastUpdatedMillis').and.returnValue(later);
+            spyOn(mockStore, 'getPRLastUpdatedDate').and.returnValue(later);
             const actual = await testChecker.filterPRsFetchReady([{number: 10}], now);
             expect(actual.length).toBe(0);
         });
@@ -104,7 +104,7 @@ describe('The GithubFetchChecker', () => {
             const input = [] as GithubFetchChecker.PR[];
             [1, 2, 3, 4].forEach(n => input.push({number: n}));
 
-            spyOn(mockStore, 'getPRLastUpdatedMillis').and.returnValues(
+            spyOn(mockStore, 'getPRLastUpdatedDate').and.returnValues(
                 getLater(now), undefined, getSignicantlyEarlier(now), undefined);
             const actual = await testChecker.filterPRsFetchReady(input, now);
             expect(actual.length).toBe(3);

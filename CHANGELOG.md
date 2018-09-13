@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Fixed
+- Add-on sometimes stopped displaying issue and milestone content (#30)
 
 ## [0.4.1] - 2018-08-28
 *Version bump: we did not upload correctly and couldn't continue to use the v0.4.0 version number.*
