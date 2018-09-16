@@ -83,25 +83,34 @@ namespace FeatureStoryPoints {
         calculatorNode.style.paddingLeft = '20px';
         outerContainer.appendChild(calculatorNode);
 
-        let labelTitle = document.createElement('span');
-        labelTitle.innerText = 'Work remaining: ';
+        const {ownerName, repoName} = PageDetect.getOwnerAndRepo();
+        const milestone = extractMilestoneName();
+
+        let labelTitle = document.createTextNode('Work remaining: ');
         labelCountsNode.appendChild(labelTitle);
         for (const k of ALL_LABELS_DISPLAYED_TO_USER) {
-            var label = k.toUpperCase() + ': ';
             if (k === UNLABELED) {
-                label = '|| ' + label; // Separator.
-            }
-            if (k === UNLABELED || k === MULTIPLE_LABELS) {
-                label = label.toLowerCase(); // easier to see sizes.
+                labelCountsNode.appendChild(document.createTextNode('|| ')); // Separator.
             }
 
-            let labelNode = document.createElement('span');
-            labelNode.style.fontWeight = 'bold';
-            labelNode.innerText = label;
+            let label = k;
+            if (k !== UNLABELED && k !== MULTIPLE_LABELS) {
+                label = label.toUpperCase(); // easier to see sizes.
+            }
+
+            const labelNode = document.createElement('strong');
+            if (k !== UNLABELED) {
+                labelNode.innerText = label;
+            } else {
+                const linkNode = document.createElement('a');
+                linkNode.innerText = label;
+                linkNode.href = GithubURLs.getIssueQueryNoSizeLabel(ownerName, repoName, milestone);
+                labelNode.appendChild(linkNode);
+            }
             labelCountsNode.appendChild(labelNode);
+            labelCountsNode.appendChild(document.createTextNode(': '));
 
-            let countNode = document.createElement('span');
-            countNode.innerText = labelsDisplayedToUser[k] + ' '
+            let countNode = document.createTextNode(labelsDisplayedToUser[k] + ' ');
             labelCountsNode.appendChild(countNode);
         }
 
@@ -153,6 +162,10 @@ namespace FeatureStoryPoints {
         if (resultNode) {
             resultNode.innerText = ' = ' + numDays + ' days ';
         }
+    }
+
+    function extractMilestoneName(): string {
+        return (document.querySelector(GithubDOMMilestone.SELECTOR_MILESTONE_NAME) as HTMLHeadingElement).innerText;
     }
 
     function getInputElementID(label: string) { return TAG + '-' + label.replace(' ', '-'); }

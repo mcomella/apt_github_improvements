@@ -41,4 +41,11 @@ namespace GithubURLs {
         if (!match) { return null; }
         return parseInt(match[1]);
     }
+
+    export function getIssueQueryNoSizeLabel(owner: string, repo: string, milestone: string): string {
+        // sample: https://github.com/mozilla-mobile/firefox-tv/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+milestone%3A%22Sprint+3+%283.0%29%22+-label%3A%22size+S%22+-label%3A%22size+M%22+-label%3A%22size+L%22
+        const encodedMilestone = encodeURIComponent(milestone);
+        const query = `is%3Aopen+is%3Aissue+milestone%3A%22${encodedMilestone}%22+-label%3A%22size+S%22+-label%3A%22size+M%22+-label%3A%22size+L%22`;
+        return `${getBaseURL(owner, repo)}/issues?utf8=%E2%9C%93&q=${query}`;
+    }
 }

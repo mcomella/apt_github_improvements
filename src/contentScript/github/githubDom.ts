@@ -67,3 +67,8 @@ namespace GithubDOMIssueList {
         });
     }
 }
+
+namespace GithubDOMMilestone {
+
+    export const SELECTOR_MILESTONE_NAME = '.repository-content h2';
+}
