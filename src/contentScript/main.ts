@@ -36,7 +36,8 @@ namespace Main {
             const preDiscussionsContainer = createContainer();
 
             FeatureLinkIssuesToPRs.inject(preDiscussionsContainer, pageState.referencedIssuesInPR);
-            await FeatureBugzillaHoistBugLinks.inject(preDiscussionsContainer);
+            FeatureBugzillaLinkBugXXX.inject();
+            await FeatureBugzillaHoistBugLinks.inject(preDiscussionsContainer); // after link BugXXX.
 
             injectPreDiscussionsContainer(preDiscussionsContainer);
         }
