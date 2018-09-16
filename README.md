@@ -14,6 +14,7 @@ Features for general GitHub users:
 Features for APT/Mozilla specifically (these will generally not appear when the user is not on APT/Mozilla repositories):
 - [Story Points](docs/features/story_points.md)
 - [Hoist Bugzilla bug links to the top of the issue](docs/features/hoist_bugzilla_bugs_to_top_of_issue.md)
+- [Link Bugzilla "Bug 123" in comments](docs/features/link_bugzilla_bug_123.md)
 
 ### Usage
 Some features access the GitHub API: it is [**highly recommended** to add a GitHub access token](docs/add_an_access_token.md) to avoid restricting them.
