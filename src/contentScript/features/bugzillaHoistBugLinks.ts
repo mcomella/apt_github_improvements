@@ -8,6 +8,8 @@
  *
  * You can use https://github.com/mozilla-mobile/android-components/issues/158
  * as a test page.
+ *
+ * This feature relies on FeatureBugzillaLinkBugXXX to hoist bugs like "Bug XXX".
  */
 namespace FeatureBugzillaHoistBugLinks {
 
