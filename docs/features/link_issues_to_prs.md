@@ -47,4 +47,7 @@ GitHub creates other references from issues to pull requests but these pull requ
 ## Other solutions
 [Refined GitHub][rg] uses the built-in pull request addresses issue references mentioned above.
 
+[waffle.io][waffle] creates a direct linking from PRs to issues on their kanban board but not in the standard GitHub interface.
+
+[waffle]: https://waffle.io/
 [rg]: https://github.com/sindresorhus/refined-github/

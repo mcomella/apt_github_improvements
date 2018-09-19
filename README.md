@@ -32,6 +32,8 @@ This extension adds unique functionality for Mozilla/APT so there are no existin
 
 There are other solutions that add/change GitHub functionality but they generally address a single user problem that does not overlap in scope with APT GitHub Improvements.
 
+Some individual features in this add-on will include references to other solutions.
+
 ## Development
 Install global dependencies:
 - [nodejs] (8.11.4 LTS)
