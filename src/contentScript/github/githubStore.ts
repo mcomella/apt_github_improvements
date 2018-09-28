@@ -102,7 +102,7 @@ class GithubStore {
             }
 
             const keyIssueToPR = this.getKeyIssueToPR(parseInt(issueNum));
-            toStore[keyIssueToPR] = mergedOpenPRs;
+            toStore[keyIssueToPR] = Array.from(mergedOpenPRs); // must store primitive or array.
 
             const remotePRLastUpdatedKeys = Array.from(remoteOpenPRs).map(pr => { return this.getKeyPRLastUpdated(pr); });
             remotePRLastUpdatedKeys.forEach(keyPRLastUpdated => {

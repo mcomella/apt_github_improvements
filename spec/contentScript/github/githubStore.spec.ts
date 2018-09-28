@@ -84,7 +84,7 @@ describe('A GithubStore', () => {
             await testStore.mergeIssueToPRs(input);
 
             const actualValue = backingData[getKeyIssueToPR(4)];
-            expect(actualValue).toEqual(new Set([1, 2, 3]));
+            expect(new Set(actualValue)).toEqual(new Set([1, 2, 3]));
         });
 
         it('given an empty DB, will save multiple issues', async () => {
@@ -97,9 +97,9 @@ describe('A GithubStore', () => {
             await testStore.mergeIssueToPRs(input);
 
             const actual4 = backingData[getKeyIssueToPR(4)];
-            expect(actual4).toEqual(new Set([2, 3, 4]));
+            expect(new Set(actual4)).toEqual(new Set([2, 3, 4]));
             const actual10 = backingData[getKeyIssueToPR(10)];
-            expect(actual10).toEqual(new Set([2, 5, 8]));
+            expect(new Set(actual10)).toEqual(new Set([2, 5, 8]));
         });
 
         it('given existing data for the same issue, will union the new PRs', async () => {
@@ -109,7 +109,7 @@ describe('A GithubStore', () => {
             await testStore.mergeIssueToPRs(input);
 
             const actualValue = backingData[key];
-            expect(actualValue).toEqual(new Set([1, 2, 3, 4]));
+            expect(new Set(actualValue)).toEqual(new Set([1, 2, 3, 4]));
         });
 
         it('given an empty object, will take no action', async () => {
