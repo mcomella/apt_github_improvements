@@ -159,6 +159,10 @@ class GithubStore {
     // Stored date format changed from storing Date to date millis. Since the date keys don't
     // appear to be in the format we'd expect, we must delete them all.
     private async upgrade1To2() {
+        await this.deleteRepoLastFetchAndPRLastUpdateDates();
+    }
+
+    private async deleteRepoLastFetchAndPRLastUpdateDates() {
         function keyMatchesFetchDate(key: string): boolean {
             return key.startsWith(GithubStore.PREFIX_REPO_OPEN_PR_LAST_FETCH) ||
                     key.startsWith(GithubStore.PREFIX_PR_LAST_UPDATED);
