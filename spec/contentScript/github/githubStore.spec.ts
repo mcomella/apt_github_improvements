@@ -233,8 +233,16 @@ describe('A GithubStore', () => {
         expect(actual).toBeUndefined();
     });
 
-    describe('given a non-current DB version', () => {
+    describe('GIVEN a non-current DB version', () => {
         function setDBVersion(v: number) { backingData[MockGithubStore.KEY_DB_VERSION] = v; }
+
+        async function expectOptionsStoreToBeUnmodified(testUpgrade: Function) {
+            const expected = 'whatever';
+            backingData[OptionsStore.KEY_PERSONAL_ACCESS_TOKEN] = expected;
+            await testUpgrade();
+            expect(Object.keys(backingData).length).toEqual(2); // this key and DB version.
+            expect(backingData[OptionsStore.KEY_PERSONAL_ACCESS_TOKEN]).toEqual(expected);
+        }
 
         it('will upgrade the stored DB version to the latest version', async () => {
             setDBVersion(1); // arbitrary version.
@@ -262,11 +270,7 @@ describe('A GithubStore', () => {
             beforeEach(() => { setDBVersion(1); })
 
             it('then it will not modify OptionsStore settings', async () => {
-                const expected = 'whatever';
-                backingData[OptionsStore.KEY_PERSONAL_ACCESS_TOKEN] = expected;
-                await testUpgrade();
-                expect(Object.keys(backingData).length).toEqual(2); // this key and DB version.
-                expect(backingData[OptionsStore.KEY_PERSONAL_ACCESS_TOKEN]).toEqual(expected);
+                await expectOptionsStoreToBeUnmodified(testUpgrade);
             });
 
             it('and there are no date keys then it will not remove any keys', async () => {
