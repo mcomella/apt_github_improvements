@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "APT GitHub Improvements",
-    "version": "0.5.0",
+    "version": "0.5.1",
 
     "description": "Various improvements to GitHub for the Android Product Team (APT) at Mozilla",
 
