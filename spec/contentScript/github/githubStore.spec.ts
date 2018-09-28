@@ -177,6 +177,25 @@ describe('A GithubStore', () => {
                 expect(backingData[key] <= after).toBeTruthy();
             });
         });
+
+        it('WHEN storing data THEN that data is primitive or an array', async () => {
+            function isValidDataFormat(value: any): boolean {
+                const type = typeof value;
+                const isPrimitive = type === "string" || type === "number" || type === "boolean";
+                const isArray = Array.isArray(value);
+                return isPrimitive || isArray;
+            }
+
+            await testStore.mergeIssueToPRs({
+                4: new Set([1, 20]),
+                12: new Set([487, 360, 20])
+            });
+
+            Object.keys(backingData).forEach(key => {
+                const value = backingData[key];
+                expect(isValidDataFormat(value)).toBeTruthy(`but received ${value} with type ${typeof value}`);
+            })
+        });
     });
 
     it('given a PR last update millis in the DB, will get it', async () => {
