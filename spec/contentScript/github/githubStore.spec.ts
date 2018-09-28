@@ -84,7 +84,7 @@ describe('A GithubStore', () => {
             await testStore.mergeIssueToPRs(input);
 
             const actualValue = backingData[getKeyIssueToPR(4)];
-            expect(actualValue).toEqual(new Set([1, 2, 3]));
+            expect(new Set(actualValue)).toEqual(new Set([1, 2, 3]));
         });
 
         it('given an empty DB, will save multiple issues', async () => {
@@ -97,9 +97,9 @@ describe('A GithubStore', () => {
             await testStore.mergeIssueToPRs(input);
 
             const actual4 = backingData[getKeyIssueToPR(4)];
-            expect(actual4).toEqual(new Set([2, 3, 4]));
+            expect(new Set(actual4)).toEqual(new Set([2, 3, 4]));
             const actual10 = backingData[getKeyIssueToPR(10)];
-            expect(actual10).toEqual(new Set([2, 5, 8]));
+            expect(new Set(actual10)).toEqual(new Set([2, 5, 8]));
         });
 
         it('given existing data for the same issue, will union the new PRs', async () => {
@@ -109,7 +109,7 @@ describe('A GithubStore', () => {
             await testStore.mergeIssueToPRs(input);
 
             const actualValue = backingData[key];
-            expect(actualValue).toEqual(new Set([1, 2, 3, 4]));
+            expect(new Set(actualValue)).toEqual(new Set([1, 2, 3, 4]));
         });
 
         it('given an empty object, will take no action', async () => {
@@ -177,6 +177,25 @@ describe('A GithubStore', () => {
                 expect(backingData[key] <= after).toBeTruthy();
             });
         });
+
+        it('WHEN storing data THEN that data is primitive or an array', async () => {
+            function isValidDataFormat(value: any): boolean {
+                const type = typeof value;
+                const isPrimitive = type === "string" || type === "number" || type === "boolean";
+                const isArray = Array.isArray(value);
+                return isPrimitive || isArray;
+            }
+
+            await testStore.mergeIssueToPRs({
+                4: new Set([1, 20]),
+                12: new Set([487, 360, 20])
+            });
+
+            Object.keys(backingData).forEach(key => {
+                const value = backingData[key];
+                expect(isValidDataFormat(value)).toBeTruthy(`but received ${value} with type ${typeof value}`);
+            })
+        });
     });
 
     it('given a PR last update millis in the DB, will get it', async () => {
@@ -214,8 +233,16 @@ describe('A GithubStore', () => {
         expect(actual).toBeUndefined();
     });
 
-    describe('given a non-current DB version', () => {
+    describe('GIVEN a non-current DB version', () => {
         function setDBVersion(v: number) { backingData[MockGithubStore.KEY_DB_VERSION] = v; }
+
+        async function expectOptionsStoreToBeUnmodified(testUpgrade: Function) {
+            const expected = 'whatever';
+            backingData[OptionsStore.KEY_PERSONAL_ACCESS_TOKEN] = expected;
+            await testUpgrade();
+            expect(Object.keys(backingData).length).toEqual(2); // this key and DB version.
+            expect(backingData[OptionsStore.KEY_PERSONAL_ACCESS_TOKEN]).toEqual(expected);
+        }
 
         it('will upgrade the stored DB version to the latest version', async () => {
             setDBVersion(1); // arbitrary version.
@@ -243,11 +270,7 @@ describe('A GithubStore', () => {
             beforeEach(() => { setDBVersion(1); })
 
             it('then it will not modify OptionsStore settings', async () => {
-                const expected = 'whatever';
-                backingData[OptionsStore.KEY_PERSONAL_ACCESS_TOKEN] = expected;
-                await testUpgrade();
-                expect(Object.keys(backingData).length).toEqual(2); // this key and DB version.
-                expect(backingData[OptionsStore.KEY_PERSONAL_ACCESS_TOKEN]).toEqual(expected);
+                await expectOptionsStoreToBeUnmodified(testUpgrade);
             });
 
             it('and there are no date keys then it will not remove any keys', async () => {
@@ -281,6 +304,32 @@ describe('A GithubStore', () => {
                 dateKeys.forEach(key => expect(backingData[key]).toBeFalsy(key));
             });
         });
+
+        describe('- an upgrade from DB version 2 to 3 -', () => {
+            async function testUpgrade() { await testStore.maybeUpgradeToVersion(3); }
+
+            beforeEach(() => { setDBVersion(2); })
+
+            it('THEN it will not modify OptionsStore settings', async () => {
+                await expectOptionsStoreToBeUnmodified(testUpgrade);
+            });
+
+            it('THEN it will delete all date values', async () => {
+                const expected = new Date().getTime();
+                const keys = [getKeyPRLastUpdate(47), getKeyRepoOpenPRLastFetchMillis()]
+                keys.forEach(key => backingData[key] = expected);
+                await testUpgrade();
+                keys.forEach(key => expect(backingData[key]).toBeUndefined());
+            });
+
+            it('THEN it will remove all issue to PR mappings', async () => {
+                const keys = [getKeyIssueToPR(42), getKeyIssueToPR(129)];
+                backingData[keys[0]] = [87, 53];
+                backingData[keys[1]] = [21, 12];
+                await testUpgrade();
+                keys.forEach(key => expect(backingData[key]).toBeUndefined());
+            });
+        })
     });
 
     function getMockStorage() {

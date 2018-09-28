@@ -14,10 +14,11 @@ class GithubStore {
     }
 
     private static readonly PREFIX_KEY = 'ghs';
+    private static readonly PREFIX_ISSUE_TO_PRS = `${GithubStore.PREFIX_KEY}-issue`;
     private static readonly PREFIX_PR_LAST_UPDATED = `${GithubStore.PREFIX_KEY}-prLastUpdate`;
     private static readonly PREFIX_REPO_OPEN_PR_LAST_FETCH = `${GithubStore.PREFIX_KEY}-openPRLastFetch`;
 
-    protected static readonly DB_VERSION = 2;
+    protected static readonly DB_VERSION = 3;
     protected static readonly KEY_DB_VERSION = `${GithubStore.PREFIX_KEY}-v`
 
     private static readonly RE_KEY_ISSUE_TO_PR = /([0-9]+)$/
@@ -102,7 +103,7 @@ class GithubStore {
             }
 
             const keyIssueToPR = this.getKeyIssueToPR(parseInt(issueNum));
-            toStore[keyIssueToPR] = mergedOpenPRs;
+            toStore[keyIssueToPR] = Array.from(mergedOpenPRs); // must store primitive or array.
 
             const remotePRLastUpdatedKeys = Array.from(remoteOpenPRs).map(pr => { return this.getKeyPRLastUpdated(pr); });
             remotePRLastUpdatedKeys.forEach(keyPRLastUpdated => {
@@ -145,13 +146,14 @@ class GithubStore {
     }
 
     private getKeyIssueToPR(issueNum: number): string {
-        return `${GithubStore.PREFIX_KEY}-issue-${this.ownerRepo}/${issueNum}`;
+        return `${GithubStore.PREFIX_ISSUE_TO_PRS}-${this.ownerRepo}/${issueNum}`;
     }
 
     private async upgrade(currentVersion: number, newVersion: number) {
         for (let i = currentVersion; i < newVersion; i++) {
             switch (currentVersion) {
                 case 1: this.upgrade1To2(); break;
+                case 2: this.upgrade2To3(); break;
             }
         }
     }
@@ -159,6 +161,25 @@ class GithubStore {
     // Stored date format changed from storing Date to date millis. Since the date keys don't
     // appear to be in the format we'd expect, we must delete them all.
     private async upgrade1To2() {
+        await this.deleteRepoLastFetchAndPRLastUpdateDates();
+    }
+
+    // Stored issue to PRs format changed from storing Set to Array. Since the values don't
+    // appear to be in the format we'd expect, we must delete them all. Since the DB is empty,
+    // we should remove the dates too.
+    private async upgrade2To3() {
+        function keyMatchesIssueToPRs(key: string): boolean {
+            return key.startsWith(GithubStore.PREFIX_ISSUE_TO_PRS);
+        }
+
+        await this.deleteRepoLastFetchAndPRLastUpdateDates();
+
+        const storeKeyToVal = await this.storage.get() as StrToAny;
+        const keysToRemove = Object.keys(storeKeyToVal).filter(keyMatchesIssueToPRs);
+        await this.storage.remove(keysToRemove);
+    }
+
+    private async deleteRepoLastFetchAndPRLastUpdateDates() {
         function keyMatchesFetchDate(key: string): boolean {
             return key.startsWith(GithubStore.PREFIX_REPO_OPEN_PR_LAST_FETCH) ||
                     key.startsWith(GithubStore.PREFIX_PR_LAST_UPDATED);
