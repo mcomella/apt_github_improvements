@@ -304,6 +304,32 @@ describe('A GithubStore', () => {
                 dateKeys.forEach(key => expect(backingData[key]).toBeFalsy(key));
             });
         });
+
+        describe('- an upgrade from DB version 2 to 3 -', () => {
+            async function testUpgrade() { await testStore.maybeUpgradeToVersion(3); }
+
+            beforeEach(() => { setDBVersion(2); })
+
+            it('THEN it will not modify OptionsStore settings', async () => {
+                await expectOptionsStoreToBeUnmodified(testUpgrade);
+            });
+
+            it('THEN it will delete all date values', async () => {
+                const expected = new Date().getTime();
+                const keys = [getKeyPRLastUpdate(47), getKeyRepoOpenPRLastFetchMillis()]
+                keys.forEach(key => backingData[key] = expected);
+                await testUpgrade();
+                keys.forEach(key => expect(backingData[key]).toBeUndefined());
+            });
+
+            it('THEN it will remove all issue to PR mappings', async () => {
+                const keys = [getKeyIssueToPR(42), getKeyIssueToPR(129)];
+                backingData[keys[0]] = [87, 53];
+                backingData[keys[1]] = [21, 12];
+                await testUpgrade();
+                keys.forEach(key => expect(backingData[key]).toBeUndefined());
+            });
+        })
     });
 
     function getMockStorage() {
