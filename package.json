@@ -20,9 +20,9 @@
     "url": "https://github.com/mcomella/apt_github_improvements/issues"
   },
   "devDependencies": {
-    "@types/firefox-webext-browser": "^58.0.3",
-    "@types/jasmine": "^2.8.8",
-    "jasmine": "^3.2.0",
-    "typescript": "^3.0.1"
+    "@types/firefox-webext-browser": "58.0.x",
+    "@types/jasmine": "2.8.x",
+    "jasmine": "3.2.x",
+    "typescript": "3.0.x"
   }
 }
