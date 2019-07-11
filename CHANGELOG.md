@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+## [0.5.2] - 2019-07-10
+### Fixed
+- Story Points no longer injected content into the DOM (#40)
+
 ## [0.5.1] - 2018-09-28
 ### Fixed
 - Add-on sometimes stopped display Issue -> PR data due to a storage format error (#33)
