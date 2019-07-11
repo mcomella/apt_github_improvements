@@ -38,10 +38,8 @@ namespace FeatureStoryPoints {
         let oldNode = document.getElementById(DIV_ID);
         if (oldNode) oldNode.remove();
 
-        let issuesList = document.getElementsByClassName('issues-listing')[0];
-        if (issuesList.parentNode) {
-            issuesList.parentNode.insertBefore(newNode, issuesList);
-        }
+        let issuesList = document.getElementsByClassName('mb-3')[0];
+        issuesList.appendChild(newNode);
     }
 
     function extractLabelsDisplayedToUser() {
