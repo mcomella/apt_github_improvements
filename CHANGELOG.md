@@ -74,7 +74,8 @@ and it's easier for the APT team to get new updates in one add-on.
 - Released as GitHub Story Points on addons.mozilla.org.
 - Count the number of size S, M, and L labels
 
-[Unreleased]: https://github.com/mcomella/apt_github_improvements/compare/v0.5.1...HEAD
+[Unreleased]: https://github.com/mcomella/apt_github_improvements/compare/v0.5.2...HEAD
+[0.5.2]: https://github.com/mcomella/apt_github_improvements/compare/v0.5.1...v0.5.2
 [0.5.1]: https://github.com/mcomella/apt_github_improvements/compare/v0.5.0...v0.5.1
 [0.5.0]: https://github.com/mcomella/apt_github_improvements/compare/v0.4.2...v0.5.0
 [0.4.2]: https://github.com/mcomella/apt_github_improvements/compare/v0.4.0...v0.4.2
